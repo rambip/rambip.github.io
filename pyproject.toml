@@ -1,0 +1,21 @@
+[project]
+name = "notebook-website"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "jupyter>=1.1.1",
+    "jupyterlab-vim>=4.1.4",
+    "markdown>=3.8.2",
+    "matplotlib>=3.10.3",
+    "numpy>=2.3.0",
+    "polars>=1.31.0",
+    "pygments>=2.19.1",
+    "ty>=0.0.1a11",
+    "yattag>=1.16.1",
+]
+
+
+[build-system]
+requires = ["setuptools"]
