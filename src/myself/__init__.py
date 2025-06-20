@@ -2,7 +2,7 @@ import polars as pl
 from datetime import date
 from pathlib import Path
 import shutil
-from IPython.display import IFrame, SVG, Audio
+from IPython.display import IFrame, SVG, Audio, Image
 
 pl.Config.set_tbl_hide_column_data_types(True)
 
@@ -54,3 +54,6 @@ def asset(relative_path):
     if extension == "svg":
         with open(path) as f:
             return SVG(f.read())
+
+    if extension in ["jpg", "jpeg", "png"]:
+        return Image(path_for_website)
