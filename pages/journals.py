@@ -30,3 +30,8 @@ def _():
 def _():
     import journal_2025_12_13
     journal_2025_12_13.page_()
+
+@app.cell
+def _():
+    import journal_2025_12_14
+    journal_2025_12_14.page_()

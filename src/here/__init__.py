@@ -160,7 +160,7 @@ def include(path_str, app, link_name, url=None):
 
     # Read the Python file content
     with open(path, "r") as f:
-        python_content = f.read()
+        python_content = repr(f.read())
 
     with open(PATH_TEMPLATES / "main.html") as f:
         template_str = f.read()

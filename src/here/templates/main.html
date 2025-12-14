@@ -6,6 +6,23 @@
         <title>{{ name }}</title>
         <link rel="stylesheet" href="/assets/style.css" />
         <link rel="stylesheet" href="/assets/code_highlighting.css" />
+        <!--add the marimo-tex element for math support.-->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+        <script>
+        class MarimoTex extends HTMLElement {
+          connectedCallback() {
+            const latex = this.textContent;
+            this.innerHTML = '';
+            katex.render(latex, this, {
+              throwOnError: false,
+              displayMode: this.hasAttribute('display')
+            });
+          }
+        }
+
+        customElements.define('marimo-tex', MarimoTex);
+        </script>
         <style>
             .download-button {
                 background-color: #35765e;
@@ -22,7 +39,7 @@
             }
         </style>
     </head>
-    <body>
+    <body id="root">
         <nav>
             <a href="{{ home_page_url }}">Home</a>
         </nav>
@@ -32,7 +49,7 @@
             </button>
             <script>
                 function downloadFile() {
-                    const content = `{{ python_content | replace('\n', '\\n') }}`;
+                    const content = {{ python_content }}.replace(/\\n/g, '\n');
                     const blob = new Blob([content], { type: "text/plain" });
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement("a");
