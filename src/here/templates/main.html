@@ -12,12 +12,17 @@
         <script>
         class MarimoTex extends HTMLElement {
           connectedCallback() {
-            const latex = this.textContent;
-            this.innerHTML = '';
-            katex.render(latex, this, {
-              throwOnError: false,
-              displayMode: this.hasAttribute('display')
-            });
+            // Wait for content to be available
+            setTimeout(() => {
+              const latex = this.textContent.slice(3, -3);
+              if (!latex) return;
+
+              this.innerHTML = '';
+              katex.render(latex, this, {
+                throwOnError: false,
+                displayMode: this.hasAttribute('display')
+              });
+            }, 0);
           }
         }
 
