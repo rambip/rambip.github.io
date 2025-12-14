@@ -175,7 +175,7 @@ def include(path_str, app, link_name, url=None):
 
 def asset(relative_path: str):
     target_path: Path = PATH_ASSETS / relative_path
-    if target_path.exists():
+    if not target_path.exists():
         if PROJECTS is None:
             return marimo.Html('<span style="color:orange">Can\'t access assets</span>')
         else:
