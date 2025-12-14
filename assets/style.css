@@ -42,6 +42,13 @@ video {
     padding: 10px;
 }
 
+blockquote {
+    font-style: italic;
+    background-color: #d5dfee;
+    border-radius: 5px;
+    padding: 5px;
+}
+
 body {
     font-family: sans-serif;
     max-width: 1000px;
