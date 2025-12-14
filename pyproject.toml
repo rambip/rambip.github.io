@@ -1,0 +1,33 @@
+[project]
+name = "here"
+version = "0.1.0"
+description = "Helpers for my marimo website"
+readme = "README.md"
+authors = [
+    { name = "Antonin P", email = "antonin.peronnet@telecom-paris.fr" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "altair>=5.5.0",
+    "dotenv>=0.9.9",
+    "jinja2>=3.1.6",
+    "marimo>=0.17.6",
+    "markdown>=3.10",
+    "micropip>=0.11.0",
+    "numpy>=2.3.4",
+    "plotly>=6.4.0",
+    "polars>=1.35.1",
+    "pygments>=2.19.2",
+    "requests>=2.32.5",
+    "typst>=0.14.1",
+    "vye-svgbob>=0.1.4",
+]
+
+[build-system]
+requires = ["uv_build>=0.9.7,<0.10.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.14.8",
+]

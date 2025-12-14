@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>{{ name }}</title>
+        <link rel="stylesheet" href="/assets/style.css" />
+        <link rel="stylesheet" href="/assets/code_highlighting.css" />
+        <style>
+            .download-button {
+                background-color: #35765e;
+                border: none;
+                color: white;
+                padding: 10px 20px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin: 10px 0;
+                cursor: pointer;
+                border-radius: 4px;
+            }
+        </style>
+    </head>
+    <body>
+        <nav>
+            <a href="{{ home_page_url }}">Home</a>
+        </nav>
+        <div class="content">
+            <button class="download-button" onclick="downloadFile()">
+                Download {{ python_filename }} locally
+            </button>
+            <script>
+                function downloadFile() {
+                    const content = `{{ python_content | replace('\n', '\\n') }}`;
+                    const blob = new Blob([content], { type: "text/plain" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = "{{ python_filename }}";
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }
+            </script>
+            {% for code_block, output in content %}
+                {%if code_block%} {{ code_block }}
+                {%if output %}
+                <div class="cell-output">{{ output }}</div>
+                {%endif %}
+                {%else %}
+                {%if output %}
+                <div>{{ output }}</div>
+                {%endif %}
+                {%endif %}
+            </section>
+            {% endfor %}
+        </div>
+    </body>
+</html>
