@@ -129,7 +129,7 @@ span.linenos.special {
 } /* Literal.Number */
 .highlight .s {
     /*color: #ba2121;*/
-    font-style: italic;
+    color: #808080;
 } /* Literal.String */
 .highlight .na {
     /*color: #687822;*/
@@ -209,11 +209,9 @@ span.linenos.special {
 } /* Literal.String.Delimiter */
 .highlight .sd {
     /*color: #ba2121;*/
-    font-style: italic;
 } /* Literal.String.Doc */
 .highlight .s2 {
     color: #808080;
-    font-style: italic;
 } /* Literal.String.Double */
 .highlight .se {
     /*color: #aa5d1f;*/
