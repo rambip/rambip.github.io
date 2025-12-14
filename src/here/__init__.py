@@ -134,7 +134,7 @@ def generate_html(template_str, path, app, python_content, url=None):
     content = list(zip(code, outputs))
 
     env = Environment(loader=FileSystemLoader(PATH_TEMPLATES))
-    template = env.get_template("include_template.html")
+    template = env.get_template("main.html")
 
     return template.render(
         name=url,
