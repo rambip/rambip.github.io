@@ -43,17 +43,35 @@ So let's list some **advantages** of list items
     - They are easy to display with html
     - They can be nested recursively
         - They can be nested recursively
-            - They can be nested recursively as deep as you want
+            - They can be nested recursively (as deep as you want)
                 - They can be .. ok I think you got the point
     - Because they are trees, they can represent a wide variety of data:
         - [Dendograms](https://en.wikipedia.org/wiki/Dendrogram)
         - Typologies (classes and subclasses)
         - folders
         - very detailed tasklists
+        - [syntax trees](https://en.wikipedia.org/wiki/Abstract_syntax_tree)
+            - example:
+                - because
+                    - representing
+                        - item lists
+                        - trees
+                    - being usefull
+                        - item lists
+                        - to
+                            - express
+                                - unambiguously
+                                - stuff
+                                    - grammatical
     - They force you to thing about structure first, content second
+    - They can even be numbered !
+        - 1) This makes you look serious
+        - 2) This allows you to refer to previous points, which is more important than 1)
+        - 3) But this can be a trap, because sometimes you realize a simple list would have been enough.
     - they are faster to type, and I have also noticed that they are easier to write than paragraphs when I'm brain-dead
         - talking about [being brain dead](https://www.oulipo.net/fr/99-notes-preparatoires-aux-99-notes-preparatoires) ...
     - They can be folded, which is [very powerful for explanations](https://ncase.me/nutshell/)
+        - > You can even use them to add details to something you write, like a footnote ! That's a great pedagogical tool.
     - They reflect the [Dyck language](https://en.wikipedia.org/wiki/Dyck_language). Make what you want from this information.
 """)
 
@@ -79,6 +97,12 @@ And some **drawbacks**:
         - Wait, actually it is not what the user want. Let's re-think about the situation
         - In conclusion, list items have advantages and drawbacks — You have to chose wisely when they should be used.
             - https://kieranhealy.org/files/papers/fuck-nuance.pdf
+""")
+
+@app.cell(hide_code=True)
+def _():
+    mo.md(r"""
+If you want even more discussion about "outlines" (another name for list item content), go read [this blogpost from a friend of mine](https://medium.com/@osk42/outlines-as-the-center-of-all-formats-0b56088eab32)
 """)
 
 @app.cell(hide_code=True)
