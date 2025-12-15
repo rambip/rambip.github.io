@@ -12,31 +12,31 @@ def page_():
     return include(__file__, globals()["app"], "# The beginning")
 
 @app.cell(hide_code=True)
-def _():
+def _(mo):
     mo.md(r"""
 # The beginning
 """)
 
 @app.cell(hide_code=True)
-def _():
+def _(mo):
     mo.md(r"""
 Ok, let's do this.
 """)
 
 @app.cell(hide_code=True)
-def _():
+def _(mo):
     mo.md(r"""
 This is my first note in what may become a long series of posts in on [My blog]([[Home]]) .
 """)
 
 @app.cell(hide_code=True)
-def _():
+def _(mo):
     mo.md(r"""
 I wanted to do that for a long time, but never actually committed. Now is the time.
 """)
 
 @app.cell(hide_code=True)
-def _():
+def _(mo):
     mo.md(r"""
 There are a few reasons why I decided to invest time into this seemingly needless project. Here are a few:
     - because I like to write
@@ -55,13 +55,13 @@ There are a few reasons why I decided to invest time into this seemingly needles
 """)
 
 @app.cell(hide_code=True)
-def _():
+def _(mo):
     mo.md(r"""
 Don't expect anything. Or do, who am I to say you not to.
 """)
 
 @app.cell(hide_code=True)
-def _():
+def _(mo):
     mo.md(r"""
 That's all for today. Bye !
 """)

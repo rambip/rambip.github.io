@@ -47,7 +47,7 @@ def me():
 
 CELL_TEMPLATE_MD = """
 @app.cell(hide_code=True)
-def _():
+def _(mo):
     mo.md(r\"\"\"
 {md}
 \"\"\")

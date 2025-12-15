@@ -12,13 +12,13 @@ def page_():
     return include(__file__, globals()["app"], "# Bullet points")
 
 @app.cell(hide_code=True)
-def _():
+def _(mo):
     mo.md(r"""
 # Bullet points
 """)
 
 @app.cell(hide_code=True)
-def _():
+def _(mo):
     mo.md(r"""
 If you read the previous entries in my journal / blog post / thought dumping substrate, you probably noticed the way of writing is special.
 id:: 693c7d29-1968-4ae4-97d4-8f6ddf35e0fe
@@ -29,7 +29,7 @@ id:: 693c7d29-1968-4ae4-97d4-8f6ddf35e0fe
 """)
 
 @app.cell(hide_code=True)
-def _():
+def _(mo):
     mo.md(r"""
 This is a semi-deliberate choice. I decided to give a go to [LogSeq](https://logseq.com/), a note-taking #OpenSource software that is built around the idea of "blocks". This mean that every content, every conceptual knowledge item is an item in a list. This allow to do funny things like linking to [other blocks](((693c7d29-1968-4ae4-97d4-8f6ddf35e0fe))). That's completely overkill for a blog, and probably pointless. But I had to try to be sure. And [adding constraints](https://oulipo.net/fr/oulipiens/o) drives progress.
     - As a side note, I implemented part of the blog generation logic by myself. So they are missing features, and I'm not sure I will have the time / motivation to implement linking blocks. I will probably write a post about how this blog generator works in the future.
@@ -37,7 +37,7 @@ This is a semi-deliberate choice. I decided to give a go to [LogSeq](https://log
 """)
 
 @app.cell(hide_code=True)
-def _():
+def _(mo):
     mo.md(r"""
 So let's list some **advantages** of list items
     - They are easy to display with html
@@ -76,7 +76,7 @@ So let's list some **advantages** of list items
 """)
 
 @app.cell(hide_code=True)
-def _():
+def _(mo):
     mo.md(r"""
 And some **drawbacks**:
     - Tree are less expressive than graphs
@@ -100,13 +100,13 @@ And some **drawbacks**:
 """)
 
 @app.cell(hide_code=True)
-def _():
+def _(mo):
     mo.md(r"""
 If you want even more discussion about "outlines" (another name for list item content), go read [this blogpost from a friend of mine](https://medium.com/@osk42/outlines-as-the-center-of-all-formats-0b56088eab32)
 """)
 
 @app.cell(hide_code=True)
-def _():
+def _(mo):
     mo.md(r"""
 Ok, I think I will stop there.
     - Well, technically, you added a line after that 🧠
