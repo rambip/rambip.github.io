@@ -3,6 +3,13 @@ import marimo
 __generated_with = "0.17.6"
 app = marimo.App(width="medium")
 
+with app.setup(hide_code=True):
+
+    def page_():
+        from here import Embed
+
+        return Embed(__file__, globals()["app"], "Ascii art !")
+
 
 @app.cell(hide_code=True)
 def _(mo):
@@ -17,13 +24,8 @@ def _():
     import marimo as mo
     import vye_svgbob
     from marimo import Html
+
     return Html, mo, vye_svgbob
-
-
-@app.function(hide_code=True)
-def page_():
-    from here import include 
-    return include(__file__, globals()["app"], "Ascii art")
 
 
 @app.cell
@@ -52,20 +54,20 @@ def _(Html, vye_svgbob):
 
 
 
-                        V                                                     Y        
-                                                                     X    ┌──────-──┐   
-            ┌──────────────────-───┐                         ┌────────────┼───┐     │   
-            │                      |                         │            │   │     │   
-                                                                                    │   
-    ┌───┐  ┌───┐  ┌───┐  ┌───┐  ┌─-─┐                ┌───┐  ┌───┐  ┌───┐  ┌───┐  ┌─-─┐ 
-    │ A │  │ B │  │ C │  │ D │  │ E │                │ A │  │ B │  │ C │  │ D │  │ E │ 
-    └───┘  └───┘  └───┘  └───┘  └───┘                └───┘  └───┘  └───┘  └───┘  └───┘ 
+                        V                                                     Y
+                                                                     X    ┌──────-──┐
+            ┌──────────────────-───┐                         ┌────────────┼───┐     │
+            │                      |                         │            │   │     │
+                                                                                    │
+    ┌───┐  ┌───┐  ┌───┐  ┌───┐  ┌─-─┐                ┌───┐  ┌───┐  ┌───┐  ┌───┐  ┌─-─┐
+    │ A │  │ B │  │ C │  │ D │  │ E │                │ A │  │ B │  │ C │  │ D │  │ E │
+    └───┘  └───┘  └───┘  └───┘  └───┘                └───┘  └───┘  └───┘  └───┘  └───┘
 
-    │                        │                       │                        │        
-    └────────────────────────┘                       └────────────────────────┘        
+    │                        │                       │                        │
+    └────────────────────────┘                       └────────────────────────┘
 
-                U                                                U                                                            
-    """                                                                                         
+                U                                                U
+    """
     Html(vye_svgbob.to_svg(ascii_art_2))
     return
 

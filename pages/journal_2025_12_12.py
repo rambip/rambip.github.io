@@ -1,44 +1,26 @@
 
 import marimo
 app = marimo.App(width="medium")
-@app.cell
-def _():
+with app.setup(hide_code=True):
     import marimo as mo
-    return (mo,)
-
-@app.function(hide_code=True)
-def page_():
-    from here import include
-    return include(__file__, globals()["app"], "# Bullet points")
+    
+    def page_():
+        from here import Embed
+        return Embed(__file__, globals()["app"], "# Bullet points", [])
 
 @app.cell(hide_code=True)
-def _(mo):
+def _():
     mo.md(r"""
 # Bullet points
-""")
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
 If you read the previous entries in my journal / blog post / thought dumping substrate, you probably noticed the way of writing is special.
 id:: 693c7d29-1968-4ae4-97d4-8f6ddf35e0fe
     - It's probably not related to style, but to formatting
     - You may find it very annoying
         - maybe even clunky to read
     - And you're probably wondering when the next item in this list will be.
-""")
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
 This is a semi-deliberate choice. I decided to give a go to [LogSeq](https://logseq.com/), a note-taking #OpenSource software that is built around the idea of "blocks". This mean that every content, every conceptual knowledge item is an item in a list. This allow to do funny things like linking to [other blocks](((693c7d29-1968-4ae4-97d4-8f6ddf35e0fe))). That's completely overkill for a blog, and probably pointless. But I had to try to be sure. And [adding constraints](https://oulipo.net/fr/oulipiens/o) drives progress.
     - As a side note, I implemented part of the blog generation logic by myself. So they are missing features, and I'm not sure I will have the time / motivation to implement linking blocks. I will probably write a post about how this blog generator works in the future.
       id:: 693c81cf-36f5-484e-a37a-881806f52a7c
-""")
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
 So let's list some **advantages** of list items
     - They are easy to display with html
     - They can be nested recursively
@@ -73,11 +55,6 @@ So let's list some **advantages** of list items
     - They can be folded, which is [very powerful for explanations](https://ncase.me/nutshell/)
         - > You can even use them to add details to something you write, like a footnote ! That's a great pedagogical tool.
     - They reflect the [Dyck language](https://en.wikipedia.org/wiki/Dyck_language). Make what you want from this information.
-""")
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
 And some **drawbacks**:
     - Tree are less expressive than graphs
         - They can't handle cycles
@@ -97,17 +74,7 @@ And some **drawbacks**:
         - Wait, actually it is not what the user want. Let's re-think about the situation
         - In conclusion, list items have advantages and drawbacks — You have to chose wisely when they should be used.
             - https://kieranhealy.org/files/papers/fuck-nuance.pdf
-""")
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
 If you want even more discussion about "outlines" (another name for list item content), go read [this blogpost from a friend of mine](https://medium.com/@osk42/outlines-as-the-center-of-all-formats-0b56088eab32)
-""")
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
 Ok, I think I will stop there.
     - Well, technically, you added a line after that 🧠
         - Shut up !

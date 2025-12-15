@@ -9,6 +9,7 @@ authors = [
 requires-python = ">=3.13"
 dependencies = [
     "altair>=5.5.0",
+    "cachier>=4.1.0",
     "dotenv>=0.9.9",
     "jinja2>=3.1.6",
     "marimo>=0.17.6",

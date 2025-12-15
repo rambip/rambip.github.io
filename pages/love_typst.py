@@ -6,15 +6,17 @@ app = marimo.App(width="medium")
 
 @app.cell
 def _():
-    import typst as typst_lib
     import marimo as mo
+    import typst as typst_lib
+
     return mo, typst_lib
 
 
 @app.function(hide_code=True)
 def page_():
-    from here import include
-    return include(__file__, globals()["app"], "The greatest markup language")
+    from here import Embed
+
+    return Embed(__file__, globals()["app"], "The greatest markup language")
 
 
 @app.cell(hide_code=True)
@@ -31,10 +33,12 @@ def _(mo, typst_lib):
     #set page(width: auto, height: auto, margin: 10pt)
     #set text(size: 20pt)
     """
+
     def typst(input):
         source = (header + input).encode("utf-8")
         svg = typst_lib.compile(source, format="svg")
         return mo.Html(svg.decode("utf-8"))
+
     return (typst,)
 
 

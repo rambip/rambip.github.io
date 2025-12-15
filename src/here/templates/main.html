@@ -7,26 +7,29 @@
         <link rel="stylesheet" href="/assets/style.css" />
         <link rel="stylesheet" href="/assets/code_highlighting.css" />
         <!--add the marimo-tex element for math support.-->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+        />
         <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
         <script>
-        class MarimoTex extends HTMLElement {
-          connectedCallback() {
-            // Wait for content to be available
-            setTimeout(() => {
-              const latex = this.textContent.slice(3, -3);
-              if (!latex) return;
+            class MarimoTex extends HTMLElement {
+                connectedCallback() {
+                    // Wait for content to be available
+                    setTimeout(() => {
+                        const latex = this.textContent.slice(3, -3);
+                        if (!latex) return;
 
-              this.innerHTML = '';
-              katex.render(latex, this, {
-                throwOnError: false,
-                displayMode: this.hasAttribute('display')
-              });
-            }, 0);
-          }
-        }
+                        this.innerHTML = "";
+                        katex.render(latex, this, {
+                            throwOnError: false,
+                            displayMode: this.hasAttribute("display"),
+                        });
+                    }, 0);
+                }
+            }
 
-        customElements.define('marimo-tex', MarimoTex);
+            customElements.define("marimo-tex", MarimoTex);
         </script>
         <style>
             .download-button {
@@ -66,18 +69,12 @@
                     URL.revokeObjectURL(url);
                 }
             </script>
-            {% for code_block, output in content %}
-                {%if code_block%} {{ code_block }}
-                {%if output %}
-                <div class="cell-output">{{ output }}</div>
-                {%endif %}
-                {%else %}
-                {%if output %}
-                <div>{{ output }}</div>
-                {%endif %}
-                {%endif %}
-            </section>
-            {% endfor %}
+            {% for code_block, output in content %} {%if code_block%} {{
+            code_block }} {%if output %}
+            <div class="cell-output">{{ output }}</div>
+            {%endif %} {%else %} {%if output %}
+            <div>{{ output }}</div>
+            {%endif %} {%endif %} {% endfor %}
         </div>
     </body>
 </html>

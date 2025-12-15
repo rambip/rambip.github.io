@@ -3,21 +3,24 @@ import marimo
 __generated_with = "0.17.6"
 app = marimo.App(width="medium")
 
+with app.setup(hide_code=True):
+
+    def page_():
+        from here import Embed
+
+        return Embed(
+            __file__, globals()["app"], "Rubik's cube emulation in 10 lines of numpy"
+        )
+
 
 @app.cell
 def _():
     import marimo as mo
     import numpy as np
-    import plotly.express as px
     import plotly.graph_objects as go
     from plotly.subplots import make_subplots
+
     return go, make_subplots, mo, np
-
-
-@app.function(hide_code=True)
-def page_():
-    from here import include
-    return include(__file__, globals()["app"], "Rubik's cube emulation in 10 lines of numpy")
 
 
 @app.cell(hide_code=True)
@@ -43,7 +46,6 @@ def _(np):
 
     solved = lambda n: np.indices((n, n, n, 3, 2))
 
-
     def move(n, i, d, d1, d2):
         # create the random permutation
         s = solved(n)
@@ -55,6 +57,7 @@ def _(np):
         result[-2, *idx, [d1, d2]] = s[-2, *idx, [d2, d1]]
         result[-1, *idx, d1] = 1 - s[-1, *idx, d2]
         return result
+
     return arr, cho, i3, move, solved
 
 
@@ -86,21 +89,23 @@ def _(COLORS, SQUARE, arr, go, i3, make_subplots, move, np, solved):
                     s[:, [2, d]] = s[:, [d, 2]]
                     x, y, z = (s + p).T
                     losange = arr((2, 4), x - z, x - 2 * y + z)
-                    c = COLORS[*cube[-2:, *p, d, 0]]*256
-                    traces.append(go.Scatter(
-                        x=list(losange[0]) + [losange[0,0]],
-                        y=list(losange[1]) + [losange[1,0]],
-                        fill="toself",
-                        fillcolor=f"rgb({c[0]},{c[1]},{c[2]})",
-                        line=dict(color="black", width=1),
-                        mode="lines",
-                        showlegend=False,
-                    ))
+                    c = COLORS[*cube[-2:, *p, d, 0]] * 256
+                    traces.append(
+                        go.Scatter(
+                            x=list(losange[0]) + [losange[0, 0]],
+                            y=list(losange[1]) + [losange[1, 0]],
+                            fill="toself",
+                            fillcolor=f"rgb({c[0]},{c[1]},{c[2]})",
+                            line=dict(color="black", width=1),
+                            mode="lines",
+                            showlegend=False,
+                        )
+                    )
 
         return traces
 
     r0 = solved(2)
-    fig = make_subplots(rows=2, cols=3, specs=[[{'type': 'xy'}]*3]*2)
+    fig = make_subplots(rows=2, cols=3, specs=[[{"type": "xy"}] * 3] * 2)
 
     for k, row_idx in zip([-1, 1], [1, 2]):
         for i in range(3):
@@ -108,12 +113,26 @@ def _(COLORS, SQUARE, arr, go, i3, make_subplots, move, np, solved):
             _traces = display_plotly(r0[:, *_m])
 
             for trace in _traces:
-                fig.add_trace(trace, row=row_idx, col=i+1)
+                fig.add_trace(trace, row=row_idx, col=i + 1)
 
-            fig.update_xaxes(range=[-4, 4], showticklabels=False, showgrid=False, zeroline=False, row=row_idx, col=i+1)
-            fig.update_yaxes(range=[-6, 6], showticklabels=False, showgrid=False, zeroline=False, row=row_idx, col=i+1)
+            fig.update_xaxes(
+                range=[-4, 4],
+                showticklabels=False,
+                showgrid=False,
+                zeroline=False,
+                row=row_idx,
+                col=i + 1,
+            )
+            fig.update_yaxes(
+                range=[-6, 6],
+                showticklabels=False,
+                showgrid=False,
+                zeroline=False,
+                row=row_idx,
+                col=i + 1,
+            )
 
-    fig.update_layout(width=900, height=600, plot_bgcolor='white', hovermode=False)
+    fig.update_layout(width=900, height=600, plot_bgcolor="white", hovermode=False)
     fig
     return (display_plotly,)
 
@@ -131,22 +150,33 @@ def _(cho, display_plotly, go, i3, move, solved):
 
     anim = go.Figure(data=frames[0].data, frames=frames)
 
-    anim.update_xaxes(range=[-8, 8], showticklabels=False, showgrid=False, zeroline=False)
-    anim.update_yaxes(range=[-12, 12], showticklabels=False, showgrid=False, zeroline=False)
+    anim.update_xaxes(
+        range=[-8, 8], showticklabels=False, showgrid=False, zeroline=False
+    )
+    anim.update_yaxes(
+        range=[-12, 12], showticklabels=False, showgrid=False, zeroline=False
+    )
 
     anim.update_layout(
         width=600,
         height=600,
-        plot_bgcolor='white',
+        plot_bgcolor="white",
         hovermode=False,
-        updatemenus=[dict(
-            type="buttons",
-            buttons=[dict(
-                label="Play", 
-                method="animate", 
-                args=[None, {"frame": {"duration": 300}, "transition": {"duration": 0}}]
-            )]
-        )]
+        updatemenus=[
+            dict(
+                type="buttons",
+                buttons=[
+                    dict(
+                        label="Play",
+                        method="animate",
+                        args=[
+                            None,
+                            {"frame": {"duration": 300}, "transition": {"duration": 0}},
+                        ],
+                    )
+                ],
+            )
+        ],
     )
 
     anim
