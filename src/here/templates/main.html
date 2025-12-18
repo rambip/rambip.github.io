@@ -52,12 +52,18 @@
             <a href="{{ home_page_url }}">Home</a>
         </nav>
         <div class="content">
+            <script id="file-content" type="text/plain">
+                {{ python_content_encoded }}
+            </script>
             <button class="download-button" onclick="downloadFile()">
                 Download {{ python_filename }} locally
             </button>
             <script>
                 function downloadFile() {
-                    const content = {{ python_content }}.replace(/\\n/g, '\n');
+                    const base64Content = document
+                        .getElementById("file-content")
+                        .textContent.trim();
+                    const content = atob(base64Content);
                     const blob = new Blob([content], { type: "text/plain" });
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement("a");

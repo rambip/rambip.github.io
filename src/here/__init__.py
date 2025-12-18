@@ -1,3 +1,4 @@
+import base64
 import datetime
 import os
 import shutil
@@ -144,7 +145,9 @@ class Embed:
             name=self.path.name,
             content=content,
             home_page_url=HOME_PAGE_URL,
-            python_content=repr(python_content),
+            python_content_encoded=base64.b64encode(
+                bytes(python_content, "utf-8")
+            ).decode("utf-8"),
             python_filename=self.path.name,
         )
         return MarimoPage(self.url, html_content)

@@ -47,7 +47,7 @@ def main():
                 content = (
                     content.replace("\n  ", "\n")
                     .replace("\t", "    ")
-                    .replace("\n- ", "\n")
+                    .replace("\n- ", "\n\n")
                 )
 
                 f2.write(INIT_EXPORT.format(description=title, imports="", children=""))
