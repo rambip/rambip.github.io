@@ -4,16 +4,17 @@ __generated_with = "0.17.6"
 app = marimo.App(width="medium")
 
 with app.setup(hide_code=True):
-    from here import Embed
+    from pathlib import Path
 
     import academic
     import ascii
     import journals
     import love_typst
+    import marimo as mo
     import minimal_design
     import rubiks
-    from pathlib import Path
-    import marimo as mo
+
+    from here import Embed
 
     def page_():
         return Embed(
@@ -31,8 +32,9 @@ with app.setup(hide_code=True):
             url="index.html",
         )
 
-
     def generate_website():
+        dest = Path(__file__).parent.parent / "web"
+        dest.mkdir(exist_ok=True)
         for page in page_()._build_():
             with open(Path(__file__).parent.parent / "web" / page.url, "w") as f:
                 f.write(page.html_content)
@@ -47,6 +49,7 @@ def _():
 @app.cell
 def _():
     from here import me
+
     return (me,)
 
 
