@@ -29,7 +29,7 @@ HEADACHE. diiiaaarrhhheaaa
 
 Hot and cold together, I feel torn, what a hell
 
-But no fever, no [cramps]. What's going on ?
+But no fever, no soreness. What's going on ?
 
 Doing nothing seems undoable. But doing something sound even worth.
 
