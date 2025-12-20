@@ -8,9 +8,11 @@ with app.setup(hide_code=True):
         from here import Embed
         return Embed(__file__, globals()["app"], "# Written by hand", [])
 
+    
+
 @app.cell(hide_code=True)
 def _():
-    mo.md(r"""
+    mo.md(rf"""
 # Written by hand
 
 ![image.png](../assets/image_1766167930643_0.png)

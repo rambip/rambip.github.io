@@ -8,9 +8,11 @@ with app.setup(hide_code=True):
         from here import Embed
         return Embed(__file__, globals()["app"], "# Debugging: Learning things the hard way", [])
 
+    
+
 @app.cell(hide_code=True)
 def _():
-    mo.md(r"""
+    mo.md(rf"""
 # Debugging: Learning things the hard way
 
 Writing code for a wide variety of project is a great way to learn new things and getting smarter. But sometimes, it's a painful and inefficient process. Let me introduce you to: the debugging hell.
@@ -22,7 +24,7 @@ I learned some things this way. As I said, it's not efficient, and moreover it w
     - iframes need a closing tag, even if nobody puts stuff inside. If you do `<iframe src="x.pdf"/>`, everything after the iframe will be invisible on your page. You need `<iframe src="x.pdf"></iframe>`
     - Monkey-C, the programming language created by Garmin that is *smartwatch-oriented* (they're geniuses), is weird. They have a concept called a *Symbol*. It's a compile-time construct, like a named constant pointer you can use instead of an enum. But when you create a menu, the identifiers of the choices are automatically converted to these *Symbols*. And funnily enough, you can't store *Symbols* in the device storage. So if you do a menu, get the choice of the user, store it in the long-term memory of the file, and try to retrieve it, you will get a crash without any error message. I you want the text associated with the menu option the user just clicked, have to do something like that:
         - <code><pre>
-          var categoryStrings = {
+          var categoryStrings = {{
             :work => Rez.Strings.CategoryWork,
             :friends => Rez.Strings.CategoryFriends,
             :family => Rez.Strings.CategoryFamily,
@@ -30,7 +32,7 @@ I learned some things this way. As I said, it's not efficient, and moreover it w
             :administrative => Rez.Strings.CategoryAdministrative,
             :hobbies => Rez.Strings.CategoryHobbies,
             :transport => Rez.Strings.CategoryTransport,
-          };
+          }};
           </pre></code>
         - And of course, one day I changed the definition of the menu and I forgot to change this mapping. It compiled fine, and then **the app crashed again, on my wrist !**
     - Some UTF-8 characters are not associated with a specified representation. They are called [Private user area characters](https://en.wikipedia.org/wiki/Private_Use_Areas). When you type one of these special symbols, what you see depends on your font. Try to paste this into other apps: ``, `` and my favourite: ` `
@@ -40,6 +42,7 @@ I learned some things this way. As I said, it's not efficient, and moreover it w
     - Fedora uses [Selinux](https://en.wikipedia.org/wiki/Security-Enhanced_Linux), a linux kernel security module. And this module creates bug with a lot of software. I mean a lot. Just look at [the number of github issues related to it](https://en.wikipedia.org/wiki/Security-Enhanced_Linux), it's huge. For example, I encountered it while trying to install [the nix package manager](https://rottencandy.github.io/blog/fedora-nix/)
     - On Linux, all your wifi connections are stored in `/etc/NetworkManager/system-connections`. But if you try to archive them somewhere to reuse them on another computer, you will realize that it does not contain passwords, just the rest of the config.
     - In javascript, if you define a script in: `<head><script> ... </script></head>`, it will run when the page loads. But if you try to get an element with `getElementById`, it will fail. Indeed, the script is executed before the entire HTML tree is loaded. You need to add the [defer](https://developer.mozilla.org/en-US/docs/Web/API/HTMLScriptElement/defer) attribute to make sure it is executed after the HTML loads.
+    - In previous versions of typst, the `type` function returned a string. After 0.7, it returns a special `type` object. For some time, the compiler warned you that it was going to be deprecated but it let you compare with strings. Now it just do not work, and the compiler tells you nothing.
     - I am obsessed with github issues. When I try a new #OpenSource library, and I notice something strange, I immediately reproduce it, create a Minimal Reproducible Example, and fill an issue. And very often, my issue ends with "It took hours before I realize the issue came from your library".
         - (Just bragging, here is the list of the > 200 issues I opened: https://github.com/search?q=is%3Aissue%20author%3Arambip&type=issues)
         - [In the bokeh ploting library](https://github.com/bokeh/bokeh/issues/14657), the smart ticking is probably too smart

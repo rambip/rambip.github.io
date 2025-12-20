@@ -8,9 +8,11 @@ with app.setup(hide_code=True):
         from here import Embed
         return Embed(__file__, globals()["app"], "# #OpenSource part 1: The AHAH moment", [])
 
+    
+
 @app.cell(hide_code=True)
 def _():
-    mo.md(r"""
+    mo.md(rf"""
 # #OpenSource part 1: The AHAH moment
 
 I love Open-Source Software. They are a lot of reasons for this fact, some are quite practical and unoriginal, and other are more personal. I really could write a blog specifically on this subject, so I'll try to summarize and share some — I hope — though provoking ideas on the subject.
@@ -136,7 +138,7 @@ LaTeX is known to be a hell, both for newbies and for experienced users. I have 
     - LaTeX is heavy and hard to install. You have multiple ways to install it, most of them break at some point, it's huge (like more than 500M of files), I'm not sure you can't install it without sudo. In comparison, Typst is a single binary
     - Since it's so hard to install, most LaTeX user use an online editor called Overleaf. It's a crappy editor to be honest, and it does not fix the second major problem of Latex: it's extremely slow to compile. Typst also has a web editor, but the compilation is in most case instant thank's to incremental compilation.
     - LaTeX syntax is horrible. The most used character in Latex is `\`, which is hard to reach on a lot of keyboard. In typst, function are defined with `#let function = ` and called with `#function()`. The escaping logic (an extremely important thing for preprocessors) is great.
-    - LaTeX syntax is slightly less awful for math, but sometimes can be confusing. In particular for things like `\underbrace`, `\big` or `\begin{align}`
+    - LaTeX syntax is slightly less awful for math, but sometimes can be confusing. In particular for things like `\underbrace`, `\big` or `\begin{{align}}`
     - Packages ... From my understanding there is no such thing as a standard library for LaTeX, so depending on your installation method you will not have the same. And they're not really nice to install. In Typst: you have a fixed core, and packages you can install just by doing `#import "@preview/cetz:0.4.2"`. And the documentation of any package you can imagine is accessible in [the Typst universe](https://typst.app/universe/)
     - Typst has a super cool Turing-complete scripting language. You can do what you want with it.
 
@@ -181,7 +183,7 @@ And then, some time after:
     - 4) I hated matplotlib
     - 5) I discovered `altair`
 
-`altair` and `polars` share the same core idea of creating an abstraction structured around a chain of operators. They are slightly more verbose for short cases (`plt.plot(x, y)` vs `alt.Chart({"x": x, "y": y}).mark_line().encode(x="x", y="y")`, they have a steeper learning curve, but when you master them they are just a joy to work with.
+`altair` and `polars` share the same core idea of creating an abstraction structured around a chain of operators. They are slightly more verbose for short cases (`plt.plot(x, y)` vs `alt.Chart({{"x": x, "y": y}}).mark_line().encode(x="x", y="y")`, they have a steeper learning curve, but when you master them they are just a joy to work with.
 
 They are plenty of examples of how I use these 2 libraries in this site.
 

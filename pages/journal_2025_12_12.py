@@ -8,9 +8,11 @@ with app.setup(hide_code=True):
         from here import Embed
         return Embed(__file__, globals()["app"], "# Bullet points", [])
 
+    
+
 @app.cell(hide_code=True)
 def _():
-    mo.md(r"""
+    mo.md(rf"""
 # Bullet points
 
 If you read the previous entries in my journal / blog post / thought dumping substrate, you probably noticed the way of writing is special.

@@ -8,9 +8,11 @@ with app.setup(hide_code=True):
         from here import Embed
         return Embed(__file__, globals()["app"], "# Fix yourself, then the world", [])
 
+    
+
 @app.cell(hide_code=True)
 def _():
-    mo.md(r"""
+    mo.md(rf"""
 # Fix yourself, then the world
 
 

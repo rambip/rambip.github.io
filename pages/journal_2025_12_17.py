@@ -8,9 +8,11 @@ with app.setup(hide_code=True):
         from here import Embed
         return Embed(__file__, globals()["app"], "# La Louve", [])
 
+    
+
 @app.cell(hide_code=True)
 def _():
-    mo.md(r"""
+    mo.md(rf"""
 # La Louve
 
 I've been very busy today. Not only did I work all day on restructuring and making future-proof an embedding based survey answer analysis algorithm (with cool visualisations and a  bit of LLMs on top) — more on that in a future day — , I spend all my evening in a super cool, but time-consuming place. As a result, it's 23:30, I'm still running on adrenaline, and I'm writing this shitty blogpost because I hope to keep up the pace. Hopeful, I will be able to rest a lot during my winter holidays (I hope it's True).

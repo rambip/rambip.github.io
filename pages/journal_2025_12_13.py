@@ -6,11 +6,17 @@ with app.setup(hide_code=True):
     
     def page_():
         from here import Embed
-        return Embed(__file__, globals()["app"], "# Sandwiches", [])
+        return Embed(__file__, globals()["app"], "", [])
+
+    import love_typst
+    sandwiches = love_typst.sandwiches()
+    
 
 @app.cell(hide_code=True)
 def _():
-    mo.md(r"""
+    mo.md(rf"""
+
+
 # Sandwiches
 
 You know what a sandwich is right ? Stuff between 2 layers of bread, something like that.
@@ -24,7 +30,7 @@ A [Toast Sandwich](https://en.wikipedia.org/wiki/Toast_sandwich). A fu\*ing **To
 
 At this point in time, the entire universe collapsed around me. What even is a sandwich ? Is toast itself a sandwich ? Is a Toast Sandwich a Sandwich Sandwich ? If you stack 2 layers of bread one on top of the other, is it a Nothing Sandwich ? I'm becoming insane, this is clearly not a sandwich. We have to ban it for the name of sanity.
     - No, wait a second. It must be a sandwich 😨. And I think I can prove it
-        - Axiom 1. We assume that if $X$ is a sandwich, $X$ with half as much filling is a sandwich. By induction, for any $n$, a sandwich with $2^{-n}$ as much filling is a sandwich.
+        - Axiom 1. We assume that if $X$ is a sandwich, $X$ with half as much filling is a sandwich. By induction, for any $n$, a sandwich with $2^{{-n}}$ as much filling is a sandwich.
         - Axiom 2. We assume that sandwiches exist. This is a non-obvious fact, but this implies that they are made of atoms. In particular, the filling is made up of a finite number of atoms.
         - Axiom 3. There is at least one person on earth that know what a sandwich is, and this person is not a scientist.
         - Axiom 4. A hamburger is a sandwich. This fact is trivial.
@@ -51,21 +57,21 @@ This research is one of the uttermost importance. Generations of researcher have
 Before I present the main theories, we need some definitions.
     - *structural starch* is anything made up mostly of long chains of glucose, and that can be hold in one hand.
     - What we will refer to as *salad* is anything that is edible and that is not structural starch. (that's actually a simplification because of Soup, but the theory would be too complex to explain here)
-    - a *Toast* is structural starch that can in theory hold salad. When it's the case, the salad is referred to as "the filling*.
+    - *Crust* is structural starch that can in theory hold salad. When it's the case, the salad is referred to as "the filling*.
     - Structural starch that cannot hold salad is quite rare, but does exist. We call them *candies*. For example, a ripped-off pancake is a candy.
-    - a (or many) *Toast(s)* with *salad* does not automatically constitute a sandwich, but a *proto-sandwich*.
+    - *Crust* with *salad* does not automatically constitute a sandwich, but a *proto-sandwich*.
 
 To make sure you understood, here are some basic questions:
     - <details>
           <summary>Is rice structural starch, candy or salad ?</summary>
-          Salad. You can't hold rice in your hands. The only exception is sushi, when rice becomes structural starch. In any case, rice is never candy.
+          Salad. You can't hold rice in your hands. The only exception is sushi, when rice becomes Crust. In any case, rice is never candy.
       </details>
     - <details>
           <summary>Is lettuce salad ?</summary>
-          No: that's a Toast. lettuce is made up of <a href="https://en.wikipedia.org/wiki/Cellulose">Cellulose</a>, very long chains of glucose. And you can hold food with a leaf of lettuce. Here is the proof: <img src="https://getinspiredeveryday.com/wp-content/uploads/2022/04/In-and-Out-Burger-Lettuce-Wraps-Get-Inspired-Everyday-18.jpg" height="200"></img></details>
+          No: that's Crust. lettuce is made up of <a href="https://en.wikipedia.org/wiki/Cellulose">Cellulose</a>, very long chains of glucose. And you can hold food with a leaf of lettuce. Here is the proof: <img src="https://getinspiredeveryday.com/wp-content/uploads/2022/04/In-and-Out-Burger-Lettuce-Wraps-Get-Inspired-Everyday-18.jpg" height="200"></img></details>
     - <details>
           <summary>What is a potato ?</summary>
-          A Potato is a Toast. A Potato chip is a Toast. And french fries are salad, because you never it a french frie alone (otherwise it would be a candy)
+          Many forms of potato exist, and it can be any of the 4. A single Potato is Crust. A Potato chip is Crust. And french fries are salad, because you never it a french frie alone (otherwise it would be a candy). Lastly, [Aligot](https://en.wikipedia.org/wiki/Aligot) is a Candy, since you can hold it in your hand but you can't fill it with salad. Thus, potatoes are universal.
       </details>
 
 # Theories
@@ -116,10 +122,18 @@ The idea is both simple and revolutionnary.
     - 3) look at all the normalized tangent vector of these points.
     - 4) Move the vectors back to the origin. You get a subset of $S_2$ (the sphere), called the **core** of the sandwich. And now, we can do topology ON THIS SPACE !
 
-We will be interested in:
-    - The dimension of the space spanned by the vectors, $d$
-    - The number of components $\alpha$
-    - The number of holes $\beta$
+We will be interested in the following quantities:
+    - The number of 0-dimensional components of the core, $C_0$
+    - The number of 1-dimensional components of the core, $C_1$
+    - The number of $2-dimensional components of the core, $C_2$
+
+The signature of the sandwich is defined as $(C_0, C_1, C_2)$
+
+Let's see a few examples:
+    - { sandwiches[0] }
+    - For the toast, there is one single vector tangent to salad (denoted in blue), so the core is a single point on the sphere. Thus, its signature is $(1, 0, 0)$
+    - { sandwiches[1] }
+    - For the croque-monsieur, the core made up of 2 points. The signature is $(2, 0, 0)$
     -
--
+    -
 """)

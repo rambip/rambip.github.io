@@ -8,9 +8,11 @@ with app.setup(hide_code=True):
         from here import Embed
         return Embed(__file__, globals()["app"], "# Go hug a tree", [])
 
+    
+
 @app.cell(hide_code=True)
 def _():
-    mo.md(r"""
+    mo.md(rf"""
 # Go hug a tree
 
 ![](https://trackslesstravelled.com/wp-content/uploads/2022/11/Styx-Tall-Trees-Forest-Reserve-standing-big-tree-1080x1350.jpg)
