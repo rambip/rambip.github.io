@@ -1,3 +1,4 @@
+import shutil
 from pathlib import Path
 
 PATH_PAGES = Path(__file__).parent / "pages"
@@ -5,7 +6,7 @@ PATH_PAGES = Path(__file__).parent / "pages"
 CELL_TEMPLATE_MD = """
 @app.cell(hide_code=True)
 def _():
-    mo.md(r\"\"\"
+    mo.md(rf\"\"\"
 {md}
 \"\"\")
 """
@@ -20,6 +21,8 @@ with app.setup(hide_code=True):
     def page_():
         from here import Embed
         return Embed(__file__, globals()["app"], "{description}", [{children}])
+
+    {init_code}
 """
 
 IMPORT = """
@@ -30,11 +33,13 @@ def _():
 
 
 def main():
-    basepath = Path("/mnt/data/Proj/my-web-journal/journals")
+    journalpath = Path("/mnt/data/Proj/my-web-journal/journals")
 
     names = []
 
-    for x in basepath.glob("*.md"):
+    shutil.copytree(journalpath.parent / "assets", "assets", dirs_exist_ok=True)
+
+    for x in journalpath.glob("*.md"):
         if not x.is_file():
             continue
         name = "journal_" + x.name.split(".")[0]
@@ -42,22 +47,41 @@ def main():
         new = PATH_PAGES / f"{name}.py"
         with open(x, "r") as f1:
             content = f1.read()
+            content = (
+                content.replace("\n  ", "\n")
+                .replace("\t", "    ")
+                .replace("\n- ", "\n\n")
+                .replace("{", "{{")
+                .replace("}", "}}")
+                .replace("{{%", "{")
+                .replace("%}}", "}")
+            )
+            if content[:5] == "- ```":
+                code_block = content.split("```")[1]
+                init_lines = code_block.split("\n")[1:]
+                content = "```".join(content.split("```")[2:])
+            else:
+                init_lines = []
             title = content.split("\n")[0]
             with open(new, "w") as f2:
-                content = (
-                    content.replace("\n  ", "\n")
-                    .replace("\t", "    ")
-                    .replace("\n- ", "\n\n")
+                f2.write(
+                    INIT_EXPORT.format(
+                        description=title,
+                        imports="",
+                        children="",
+                        init_code="\n    ".join(init_lines),
+                    )
                 )
-
-                f2.write(INIT_EXPORT.format(description=title, imports="", children=""))
                 f2.write(CELL_TEMPLATE_MD.format(md=content))
         with open(PATH_PAGES / "journals.py", "w") as f:
             imports = "\n    ".join(f"import {name}" for name in names)
             children = ",".join(f"{name}.page_()" for name in names)
             f.write(
                 INIT_EXPORT.format(
-                    description="My blogposts", imports=imports, children=children
+                    description="My blogposts",
+                    imports=imports,
+                    children=children,
+                    init_code="",
                 )
             )
             for name in names:

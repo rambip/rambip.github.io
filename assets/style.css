@@ -21,7 +21,7 @@ h6 {
 
 .markdown .paragraph {
     display: block;
-    margin: 5px;
+    margin-bottom: 1em;
 }
 
 iframe {
@@ -100,4 +100,8 @@ code {
 }
 div {
     margin-top: 10px;
+}
+
+li {
+    margin-bottom: 1em;
 }

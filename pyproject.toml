@@ -30,5 +30,6 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
+    "openai>=2.14.0",
     "ruff>=0.14.8",
 ]
