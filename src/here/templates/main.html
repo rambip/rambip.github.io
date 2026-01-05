@@ -58,6 +58,14 @@
             <button class="download-button" onclick="downloadFile()">
                 Download {{ python_filename }} locally
             </button>
+            <a
+                class="download-button"
+                href="https://marimo.app/code={{python_content_for_marimo}}"
+                target="_blank"
+            >
+                Open interactive version of the notebook
+            </a>
+
             <script>
                 function downloadFile() {
                     const base64Content = document

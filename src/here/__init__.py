@@ -5,6 +5,7 @@ import shutil
 from pathlib import Path
 from typing import Iterable, Sequence
 
+import lzstring
 import marimo
 import polars as pl
 from cachier import cachier
@@ -141,6 +142,9 @@ class Embed:
             )
         content = list(zip(code, outputs))
 
+        data_for_marimo = lzstring.LZString.compressToEncodedURIComponent(
+            python_content
+        )
         html_content = template.render(
             name=self.path.name,
             content=content,
@@ -149,6 +153,7 @@ class Embed:
                 bytes(python_content, "utf-8")
             ).decode("utf-8"),
             python_filename=self.path.name,
+            python_content_for_marimo=data_for_marimo,
         )
         return MarimoPage(self.url, html_content)
 
