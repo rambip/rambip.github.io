@@ -3,7 +3,7 @@ import marimo
 __generated_with = "0.17.6"
 app = marimo.App(width="medium")
 
-with app.setup:
+with app.setup(hide_code=True):
     def page_():
         from here import Embed
         return Embed(__file__, globals()["app"], "Lambda Calculus primer")
