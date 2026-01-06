@@ -456,12 +456,13 @@ def _(L):
 
 
 @app.cell
-def _(L, V):
+def _(L, V, mo):
     zero = L("f", "x")._("x").build()
     one = L("f", "x")._("f").call("x").build()
     two = L("f", "x")._("f").call(V("f").call("x")).build()
     three = L("f", "x")._("f").call(V("f").call(V("f").call("x"))).build()
-    zero, one, two, three
+    mo.carousel([zero, one, two, three])
+    # click on the left and right arrow to see everything
     return three, two
 
 
