@@ -9,6 +9,7 @@ with app.setup(hide_code=True):
     import academic
     import ascii
     import journals
+    import lambda_calc
     import love_typst
     import marimo as mo
     import minimal_design
@@ -28,6 +29,7 @@ with app.setup(hide_code=True):
                 journals.page_(),
                 minimal_design.page_(),
                 academic.page_(),
+                lambda_calc.page_(),
             ],
             url="index.html",
         )
@@ -82,19 +84,25 @@ def _():
 
 @app.cell
 def _():
-    rubiks.page_()
-    return
-
-
-@app.cell
-def _():
     journals.page_()
     return
 
 
 @app.cell
 def _():
+    rubiks.page_()
+    return
+
+
+@app.cell
+def _():
     ascii.page_()
+    return
+
+
+@app.cell
+def _():
+    lambda_calc.page_()
     return
 
 
