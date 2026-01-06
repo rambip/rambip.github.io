@@ -448,10 +448,10 @@ def _(L):
 
 
 @app.cell
-def _(L):
+def _(L, mo):
     l_false = L("a", "b")._("a").build()
     l_true = L("a", "b")._("b").build()
-    l_false, l_true
+    mo.carousel([l_false, l_true])
     return
 
 
@@ -462,7 +462,6 @@ def _(L, V, mo):
     two = L("f", "x")._("f").call(V("f").call("x")).build()
     three = L("f", "x")._("f").call(V("f").call(V("f").call("x"))).build()
     mo.carousel([zero, one, two, three])
-    # click on the left and right arrow to see everything
     return three, two
 
 
