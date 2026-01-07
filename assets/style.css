@@ -16,12 +16,17 @@ h4,
 h5,
 h6 {
     margin: 0px;
-    padding: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 .markdown .paragraph {
     display: block;
     margin-bottom: 1em;
+}
+
+blockquote > .paragraph {
+    display: contents !important;
 }
 
 iframe {
@@ -47,12 +52,18 @@ blockquote {
     background-color: #d5dfee;
     border-radius: 5px;
     padding: 5px;
+    margin-left: 0px;
+}
+
+summary {
+    color: #00000088;
 }
 
 body {
     font-family: sans-serif;
     max-width: 1000px;
     margin: 0 auto;
+    font-size: 18px;
 }
 table {
     border-collapse: collapse;
