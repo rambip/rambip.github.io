@@ -1,12 +1,54 @@
-@font-face {
-    font-family: "0xproto";
-    src: url("/assets/fonts/0xProto-Regular.woff2") format("woff");
+:root {
+    --font-main: sans-serif;
+    --font-mono: "0xproto", monospace;
+    --bg-code: #f5f5f5;
+    --bg-blockquote: #d5dfee;
+    --border-color: #ddd;
+    --text-color: #333;
+    --text-muted: #00000088;
+    --nav-bg: #333;
+    --accent-color: #808080cf;
+    --table-header-bg: #f2f2f2;
+
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.25rem;
+}
+
+/* Global Box Sizing */
+html {
+    box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
 }
 
 @font-face {
     font-family: "0xproto";
-    src: url("/assets/fonts/0xProto-Bold.woff2") format("woff");
-    font-weight: bold;
+    src: url("/assets/fonts/0xProto-Regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "0xproto";
+    src: url("/assets/fonts/0xProto-Bold.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+body {
+    font-family: var(--font-main);
+    max-width: 1000px;
+    margin: 0 auto;
+    font-size: 1.125rem; /* 18px */
+    line-height: 1.5;
+    color: var(--text-color);
 }
 
 h1,
@@ -15,9 +57,8 @@ h3,
 h4,
 h5,
 h6 {
-    margin: 0px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    margin: 0;
+    padding: var(--spacing-sm) 0;
 }
 
 .markdown .paragraph {
@@ -25,66 +66,65 @@ h6 {
     margin-bottom: 1em;
 }
 
-blockquote > .paragraph {
-    display: contents !important;
+.markdown blockquote > .paragraph {
+    display: contents;
+}
+
+/* Ensure images and videos are responsive and centered if needed */
+img,
+video {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: var(--spacing-md) auto;
 }
 
 iframe {
     height: 80vh;
     width: 100%;
-}
-
-img,
-video {
-    max-width: 100%;
+    border: none;
 }
 
 .cell-output {
-    margin-left: 10px;
-    margin-bottom: 20px;
-    border-left: 5px solid #808080cf;
-    padding-left: 10px;
-    padding: 10px;
+    margin-left: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+    border-left: 5px solid var(--accent-color);
+    padding: var(--spacing-sm);
 }
 
 blockquote {
     font-style: italic;
-    background-color: #d5dfee;
+    background-color: var(--bg-blockquote);
     border-radius: 5px;
-    padding: 5px;
-    margin-left: 0px;
+    padding: var(--spacing-sm);
+    margin: var(--spacing-md) 0;
 }
 
 summary {
-    color: #00000088;
+    color: var(--text-muted);
+    cursor: pointer;
 }
 
-body {
-    font-family: sans-serif;
-    max-width: 1000px;
-    margin: 0 auto;
-    font-size: 18px;
-}
 table {
     border-collapse: collapse;
     width: 100%;
-    margin: 20px 0;
+    margin: var(--spacing-lg) 0;
 }
 
 table th {
-    background-color: #f2f2f2;
+    background-color: var(--table-header-bg);
 }
 
 table td,
 table th {
-    border: 1px solid #ddd;
-    padding: 8px;
+    border: 1px solid var(--border-color);
+    padding: var(--spacing-sm);
     text-align: left;
 }
 
 nav {
-    background-color: #333;
-    padding: 1rem;
+    background-color: var(--nav-bg);
+    padding: var(--spacing-md);
 }
 
 nav a {
@@ -94,25 +134,29 @@ nav a {
 }
 
 .content {
-    padding: 1rem;
+    padding: var(--spacing-md);
+}
+
+pre,
+code {
+    font-family: var(--font-mono);
 }
 
 pre {
-    font-family: "0xproto";
-    line-height: 125%;
-    background-color: #f5f5f5;
-    padding: 5px;
+    line-height: 1.25;
+    background-color: var(--bg-code);
+    padding: var(--spacing-sm);
     border-radius: 5px;
-    margin: 5px;
-}
-
-code {
-    font-family: "0xproto";
-}
-div {
-    margin-top: 10px;
+    margin: var(--spacing-sm);
+    overflow-x: auto;
 }
 
 li {
-    margin-bottom: 1em;
+    margin-bottom: 0.5em;
+}
+
+/* Removed the generic 'div' selector as it's an anti-pattern.
+   If you need spacing between sections, use a specific class like .section */
+.content > div {
+    margin-top: var(--spacing-sm);
 }
