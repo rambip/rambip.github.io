@@ -36,44 +36,31 @@ Of course, I noticed them. You can't ignore things such as depressive symptoms, 
 
 
 Let's say I go back in time. I meet my past self, and present him/me with a choice. In the next 3 years, you/I can:
-
-try to do good in the world. In 3 years you will have low motivation, you will still have health issues and you will struggle to create your community
-
-invest everything in fixing your own problems. In 3 years you will have more motivation, more focus, and people will be inspired by your enthusiasm.
+- try to do good in the world. In 3 years you will have low motivation, you will still have health issues and you will struggle to create your community
+- invest everything in fixing your own problems. In 3 years you will have more motivation, more focus, and people will be inspired by your enthusiasm.
 
 
 Presented that way, I hope my past self would see it as a no-brainer. Hence "Fix yourself, then the world".
-
-This has nothing to do with this [creepy music](https://www.youtube.com/watch?v=wYxs2wrWuFc)
+- This has nothing to do with this [creepy music](https://www.youtube.com/watch?v=wYxs2wrWuFc)
 
 
 This take can seem a bit scary. But it's a very general advice, and it's as relevant for smaller problems. Recently, I constructed a new habit. Every evening before going to bed, I list problems I had in my day. You could think it's counter-productive, but not at all ! When I'm in a bad mood, I just don't have the force to open the notebook to write in the list. And when I'm in a good mood, I'm very happy to have identified such easily avoidable problems ! It increases your reflexivity (the capacity to think about yourself and your own habits). It may depend on your character, but for me at least it's clearly beneficial. Some elements in this list you may relate to:
-
-> I wanted to close my computer at 9 PM, but thanks to a bug I wanted to fix, I closed it at 11PM. I'm not as strict on no-screen time before bed as I would like to be.
-
-> During the meal, I was not able to start a conversation with my colleague.
-
-> I constantly forgot X, Y or Z.
-
-> I have made no progress for the last 2 months regarding running, and I feel a bit weak.
-
-> This key on my keyboard is stuck, I should really investigate why.
+- > I wanted to close my computer at 9 PM, but thanks to a bug I wanted to fix, I closed it at 11PM. I'm not as strict on no-screen time before bed as I would like to be.
+- > During the meal, I was not able to start a conversation with my colleague.
+- > I constantly forgot X, Y or Z.
+- > I have made no progress for the last 2 months regarding running, and I feel a bit weak.
+- > This key on my keyboard is stuck, I should really investigate why.
 
 
 The point is, listing the problems may be the hardest step in the process of becoming a better person. To list a problem, you need to become aware of it and to decide it's a problem. You immediately start to think about how to fix it. I found a brief discussion on this subject on [LessWrong](https://www.lesswrong.com/posts/gtk2KqEtedMi7ehxN?commentId=JiAevyygcifE3Whiw)
 
 
 And once you fix the first one, you start the procedure. There is an entire mindset that I could call the "fixing mindset". It's the exact opposite of procrastination, and it's related to the [Growth mindset](https://en.wikipedia.org/wiki/Mindset#Fixed_and_growth_mindset). Once you fix the smaller problem, you have more "energy" — by lack of a better term — to tackle bigger ones. The easiest problems in the list are related to stuff (stuff to buy, stuff to repair, stuff to change). But as soon as you try to tackle harder problems, you will have to deal with the eternal monster: *your own habits*. There is now good-quality research about how to break and form new habits ([this](https://www.youtube.com/watch?v=HXuj7wAt7u8) may be a good introduction), and this is very often the same pattern.
-
-1) take the decision to change something in your life (smoking, drug, videogames, you name it)
-
-2) find a system to detect each time you have the unwanted behavior. Each time you detect it, note it (or do anything that makes you more aware of it). Look at what triggered it.
-
-3) each time you identify the trigger, try to deviate from the habit, and replace the action by something else.
-
-4) be completely free from the habit
-
-5) have more motivation to tackle another one.
+- 1) take the decision to change something in your life (smoking, drug, videogames, you name it)
+- 2) find a system to detect each time you have the unwanted behavior. Each time you detect it, note it (or do anything that makes you more aware of it). Look at what triggered it.
+- 3) each time you identify the trigger, try to deviate from the habit, and replace the action by something else.
+- 4) be completely free from the habit
+- 5) have more motivation to tackle another one.
 
 
 Of course, it's not easy. And it's not even always possible. People fail, people relapse, people need help. But if you are lucky enough to consider fixing some of your problems yourself, do it. If that sounds like personal development advice, it's because it is. That does not make it less valid.

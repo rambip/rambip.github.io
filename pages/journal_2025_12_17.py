@@ -18,9 +18,9 @@ def _():
 I've been very busy today. Not only did I work all day on restructuring and making future-proof an embedding based survey answer analysis algorithm (with cool visualisations and a  bit of LLMs on top) — more on that in a future day — , I spend all my evening in a super cool, but time-consuming place. As a result, it's 23:30, I'm still running on adrenaline, and I'm writing this shitty blogpost because I hope to keep up the pace. Hopeful, I will be able to rest a lot during my winter holidays (I hope it's True).
 
 What's this place you may ask ? It's called *La Louve*. *La Louve* is a both a community of 5000 persons, a cooperative, and a supermarket. Here is how it works in a nutshell:
-    - To be a member of *La Louve*, you buy a part of the cooperative, you become [actionnaire].
-    - You gain the right to do your groceries at the supermarket *La Louve*, with very healthy items and at a very low price
-    - You also sign a contract which makes you a sort of "forced volonteer". Once every 4 weeks, you have to do a 3 hour service. Compared to how much money you save when you do your groceries, it's clearly worth it.
+- To be a member of *La Louve*, you buy a part of the cooperative, you become [actionnaire].
+- You gain the right to do your groceries at the supermarket *La Louve*, with very healthy items and at a very low price
+- You also sign a contract which makes you a sort of "forced volonteer". Once every 4 weeks, you have to do a 3 hour service. Compared to how much money you save when you do your groceries, it's clearly worth it.
 
 Today was my second service. But there was a problem: I never had time to do the **strongly advised** in-depth visit of the building. And the only opportunity this week was just after my service. So 16:15 -> 19:15 = adding beverage and juices to the [rayons], 19:15 -> 19:35 = bying stuff, 19h:35 -> 21:10 was the visit, 21:30 -> 22:30 was eating, and I still had some things to check on my computer, so 23:00 -> 00:00 = finding a way back home through Paris' Subway.
 

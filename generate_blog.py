@@ -48,9 +48,10 @@ def main():
         with open(x, "r") as f1:
             content = f1.read()
             content = (
-                content.replace("\n  ", "\n")
-                .replace("\t", "    ")
+                content.replace("\t", "    ")
                 .replace("\n- ", "\n\n")
+                .replace("\n    ", "\n")
+                .replace("\n  ", "\n")
                 .replace("{", "{{")
                 .replace("}", "}}")
                 .replace("{{%", "{")

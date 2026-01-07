@@ -16,7 +16,7 @@ def _():
 # Go hug a tree
 
 ![](https://trackslesstravelled.com/wp-content/uploads/2022/11/Styx-Tall-Trees-Forest-Reserve-standing-big-tree-1080x1350.jpg)
-    - credits: [Candace Elms-Smith on trackslesstravelled.com](https://trackslesstravelled.com/styx-tall-trees-tasmania/)
+- credits: [Candace Elms-Smith on trackslesstravelled.com](https://trackslesstravelled.com/styx-tall-trees-tasmania/)
 
 If you know me well, you know some of my routines can seem ... strange.
 
