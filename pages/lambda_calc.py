@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.17.6"
+__generated_with = "0.18.4"
 app = marimo.App(width="medium")
 
 with app.setup(hide_code=True):
@@ -33,6 +33,8 @@ def _(mo):
     ## What is this ?
 
     This is a personnal project I created from scratch, to fulfil the very specific mission of teaching lambda-calculus in an interactive, visual way.
+
+    The source code of the project is freely available on github, feel free to give me a star: https://github.com/rambip/curryparty
 
     Come with me, we're going on an adventure !
 
@@ -368,11 +370,11 @@ def _(mo):
 
 
 @app.cell
-def _(L):
+def _(L, mo):
     return_first = L("x", "y", "z")._("x").build()
     return_second = L("x", "y", "z")._("y").build()
     return_third = L("x", "y", "z")._("z").build()
-    return_first, return_second, return_third
+    mo.vstack([return_first, return_second, return_third])
     return
 
 
@@ -448,10 +450,16 @@ def _(L):
 
 
 @app.cell
-def _(L, mo):
+def _(L):
     l_false = L("a", "b")._("a").build()
     l_true = L("a", "b")._("b").build()
-    mo.carousel([l_false, l_true])
+    l_false
+    return (l_true,)
+
+
+@app.cell
+def _(l_true):
+    l_true
     return
 
 
@@ -632,6 +640,8 @@ def _(forward):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
+    Cool right ?
+
     Let's go back to our mysterious function:
     """)
     return
@@ -646,7 +656,7 @@ def _(s_myst):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    This function implements the multiplication of church numbers.
+    It turns out that this function implements the multiplication of church numbers.
 
     Let's try it out:
     """)
@@ -686,7 +696,9 @@ def _(mo):
 
     But you may wonder (and you should): how did we go from the monstruosity to the nice "6" result ?
 
-    I spent weeks animating this stuff, so I hope you will enjoy it (for lack of understanding it, at least for now)
+    I spent weeks animating this stuff, so I hope you will enjoy it (for lack of understanding it, at least for now).
+
+    Click on the left and right arrow to navigate, click on the figure to animate.
     """)
     return
 
@@ -700,7 +712,11 @@ def _(mo, s_myst, three, two):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    TODO
+    TODO:
+    - what is a "redex", and the corresponding illustration
+    - the https://en.wikipedia.org/wiki/Church%E2%80%93Rosser_theorem
+    - the omega term
+    - the Y combinator
     """)
     return
 
