@@ -8,6 +8,7 @@ with app.setup(hide_code=True):
 
     import academic
     import ascii
+    import digestion
     import journals
     import lambda_calc
     import love_typst
@@ -30,6 +31,7 @@ with app.setup(hide_code=True):
                 minimal_design.page_(),
                 academic.page_(),
                 lambda_calc.page_(),
+                digestion.page_(),
             ],
             url="index.html",
         )
