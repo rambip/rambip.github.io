@@ -1,0 +1,61 @@
+:root {
+    --gray-3: #f1f3f5;
+    --gray-6: #dee2e6;
+    --gray-11: #212529;
+    --blue-3: #e7f5ff;
+    --blue-11: #004a99;
+}
+
+/* Hide the radio inputs visually */
+.lang-toggle {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Style the tab navigation */
+.tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--gray-6);
+    padding-bottom: 0.5rem;
+}
+
+.tab-label {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+    color: var(--gray-11);
+}
+
+.tab-label:hover {
+    background-color: var(--gray-3);
+}
+
+/* Hide documents by default when CSS is active */
+.document {
+    display: none;
+}
+
+/*
+   Cross-cell visibility logic using :has().
+   Since Marimo cells are often in separate containers, we check for the
+   checked state at the root level to toggle visibility elsewhere.
+*/
+:root:has(#english:checked) .document#doc-en {
+    display: block;
+}
+
+:root:has(#french:checked) .document#doc-fr {
+    display: block;
+}
+
+/* Active tab styling based on global state */
+:root:has(#english:checked) label[for="english"],
+:root:has(#french:checked) label[for="french"] {
+    background-color: var(--blue-3);
+    color: var(--blue-11);
+    font-weight: 600;
+}
