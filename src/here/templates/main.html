@@ -55,8 +55,12 @@
                     const base64Content = document
                         .getElementById("file-content")
                         .textContent.trim();
-                    const content = atob(base64Content);
-                    const blob = new Blob([content], { type: "text/plain" });
+                    const decoded = new TextDecoder().decode(
+                        Uint8Array.from(atob(base64Content), (c) =>
+                            c.charCodeAt(0),
+                        ),
+                    );
+                    const blob = new Blob([decoded], { type: "text/plain" });
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement("a");
                     a.href = url;
