@@ -2,6 +2,7 @@ import base64
 import datetime
 import os
 import shutil
+from io import StringIO
 from pathlib import Path
 from typing import Iterable, Sequence
 
@@ -12,6 +13,7 @@ from cachier import cachier
 from dotenv import load_dotenv
 from jinja2 import BaseLoader, Environment
 from marimo._ast.models import CellData
+from marimo._runtime.watch._file import FileState
 from marimo._server.file_router import AppFileRouter
 from marimo._utils.marimo_path import MarimoPath
 from pygments import highlight
@@ -89,10 +91,9 @@ class Embed:
         link_name: str,
         children: Sequence["Embed"] = [],
         url=None,
+        include: Sequence[FileState] = [],
     ):
         self.path = Path(path)
-        with open(self.path, "r") as f:
-            self.python_content = f.read()
         self.app = app
         self.children = tuple(children)
         if url is None:
@@ -101,6 +102,29 @@ class Embed:
             self.url = url
         self.link_name = link_name
         self.cells = get_cells(path)
+        self.includes = [f.read_text() for f in include]
+        seed_code = StringIO()
+        seed_code.write(
+            "with app.setup(hide_code=True):\n    from pathlib import Path as _Path\n"
+        )
+        for i, f in enumerate(include):
+            markup_path = str(f._value)
+            content = f.read_text()
+
+            seed_code.write(
+                f"    _included_file_to_generate_{i} = _Path({repr(markup_path)})\n"
+                f"    if not _included_file_to_generate_{i}.exists():\n"
+                f"        _included_file_to_generate_{i}.parent.mkdir(exist_ok=True, parents=True)\n"
+                f"        with open(_included_file_to_generate_{i}, 'w') as f:\n"
+                f"            f.write({repr(content)})\n"
+                "\n"
+            )
+        with open(self.path, "r") as f:
+            python_content = f.read()
+
+        self.python_content = python_content.replace(
+            "with app.setup(hide_code=True):", seed_code.getvalue()
+        )
 
     def _repr_html_(self):
         return f'<a href="/{self.url}">{self.link_name}</a>'
