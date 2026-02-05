@@ -12,7 +12,9 @@ import polars as pl
 from cachier import cachier
 from dotenv import load_dotenv
 from jinja2 import BaseLoader, Environment
+from marimo._ast.app import InternalApp
 from marimo._ast.models import CellData
+from marimo._runtime.app.script_runner import AppScriptRunner
 from marimo._runtime.watch._file import FileState
 from marimo._server.file_router import AppFileRouter
 from marimo._utils.marimo_path import MarimoPath
@@ -129,7 +131,7 @@ class Embed:
     def _repr_html_(self):
         return f'<a href="/{self.url}">{self.link_name}</a>'
 
-    @cachier()
+    @cachier(cache_dir=".cache")
     def _build_html(
         self,
         python_content: str,
@@ -147,7 +149,33 @@ class Embed:
                 return x._repr_html_()
             return repr(x)
 
-        outputs = [repr_(x) for x in self.app.run({"IN_THE_MATRIX": True})[0]]
+        stdout_outputs = [[]]
+
+        def custom_print(*args, **kwargs):
+            # Convert args to string like print does
+            import io
+
+            buffer = io.StringIO()
+            print(*args, **kwargs, file=buffer)
+            output = buffer.getvalue()
+            stdout_outputs[-1].append(output)  # Remove trailing newline
+
+        def new_cell():
+            # TODO: refactor (uggly)
+            stdout_outputs[-1] = "".join(stdout_outputs[-1])
+            stdout_outputs.append([])
+
+        self.app.run
+        glbls = {"IN_THE_MATRIX": True, "print": custom_print}
+        if self.app._setup is not None:
+            glbls.update(self.app._setup._glbls)
+        runner = AppScriptRunner(
+            InternalApp(self.app), filename=self.app._filename, glbls=glbls
+        )
+        outputs = [
+            repr_(x)
+            for x in self.app._flatten_outputs(runner._run_synchronous([new_cell])[0])
+        ]
         lexer = PythonLexer()
         formater = HtmlFormatter()
         code = [
@@ -161,10 +189,11 @@ class Embed:
             # this is when using a setup cell.
             # Marimo does not seem to provide an API to know if the cell is a setup-cell
             outputs = mismatch * [None] + outputs
+            stdout_outputs = mismatch * [""] + stdout_outputs
             assert len(code) == len(outputs), (
                 f"outputs is len {len(outputs)} and code is len {len(code)}"
             )
-        content = list(zip(code, outputs))
+        content = list(zip(code, outputs, stdout_outputs))
 
         data_for_marimo = lzstring.LZString.compressToEncodedURIComponent(
             python_content

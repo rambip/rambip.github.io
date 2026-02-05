@@ -71,10 +71,12 @@
                     URL.revokeObjectURL(url);
                 }
             </script>
-            {% for code_block, output in content %} {%if code_block%} {{
-            code_block }} {%if output %}
+            {% for code_block, output, std_output in content %} {%if
+            code_block%} {{ code_block }} {%if output %}
             <div class="cell-output">{{ output }}</div>
-            {%endif %} {%else %} {%if output %}
+            {%endif %} {%if std_output%}
+            <pre class="stdout">{{ std_output }}</pre>
+            {% endif %} {%else %} {%if output %}
             <div>{{ output }}</div>
             {%endif %} {%endif %} {% endfor %}
         </div>

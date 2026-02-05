@@ -92,12 +92,24 @@ iframe {
     padding: var(--spacing-sm);
 }
 
+.stdout {
+    margin-left: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+    border-left: 3px solid black;
+    padding: var(--spacing-sm);
+}
+
 blockquote {
     font-style: italic;
     background-color: var(--bg-blockquote);
     border-radius: 5px;
     padding: var(--spacing-sm);
     margin: var(--spacing-md) 0;
+}
+
+details {
+    border: 5px dotted gray;
+    padding: 5px;
 }
 
 summary {
@@ -142,12 +154,12 @@ code {
     font-family: var(--font-mono);
 }
 
-pre {
+pre:not(.stdout) {
+    border: 2px dashed #80808030;
     line-height: 1.25;
     background-color: var(--bg-code);
     padding: var(--spacing-sm);
     border-radius: 5px;
-    margin: var(--spacing-sm);
     overflow-x: auto;
 }
 
