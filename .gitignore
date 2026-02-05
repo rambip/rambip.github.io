@@ -12,3 +12,6 @@ archive
 
 # Virtual environments
 .venv
+
+.cache
+.zed
