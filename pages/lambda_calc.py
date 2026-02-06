@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.13"
 # dependencies = [
-#     "curryparty==0.4.0",
+#     "curryparty==0.4.2",
 #     "marimo>=0.19.7",
 #     "polars==1.38.0",
 # ]
