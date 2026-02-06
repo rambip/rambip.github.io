@@ -5,6 +5,7 @@ app = marimo.App(width="medium")
 
 with app.setup(hide_code=True):
     from pathlib import Path
+    from jinja2 import Environment, FileSystemLoader
 
     import academic
     import ascii
@@ -16,13 +17,17 @@ with app.setup(hide_code=True):
     import minimal_design
     import rubiks
 
-    from here import Embed
+    from here import Embed, PATH_MARKUP
+
+    # Setup Jinja2 environment
+    jinja_env = Environment(loader=FileSystemLoader(PATH_MARKUP))
+    template = jinja_env.get_template("template.jinja")
 
     def page_():
         return Embed(
             __file__,
             globals()["app"],
-            "home",
+            "Rambip's website",
             [
                 ascii.page_(),
                 rubiks.page_(),
@@ -39,9 +44,37 @@ with app.setup(hide_code=True):
     def generate_website():
         dest = Path(__file__).parent.parent / "web"
         dest.mkdir(exist_ok=True)
-        for page in page_()._build_():
-            with open(Path(__file__).parent.parent / "web" / page.url, "w") as f:
-                f.write(page.html_content)
+        root = page_()
+
+        # Render all children with standard template (not home)
+        for state in root._execute_children():
+            html_content = template.render(
+                title=state.title,
+                name=state.path_name,
+                content=state.content,
+                home_page_url="/index.html",
+                is_home=False,
+                python_content_encoded=state.python_content_encoded,
+                python_filename=state.path_name,
+                python_content_for_marimo=state.python_content_for_marimo,
+            )
+            with open(dest / state.url, "w") as f:
+                f.write(html_content)
+
+        # Render home page with is_home=True
+        home_state = root._execute_notebook(root.python_content, hash(root))
+        html_content = template.render(
+            title=home_state.title,
+            name=home_state.path_name,
+            content=home_state.content,
+            home_page_url="/index.html",
+            is_home=True,
+            python_content_encoded=home_state.python_content_encoded,
+            python_filename=home_state.path_name,
+            python_content_for_marimo=home_state.python_content_for_marimo,
+        )
+        with open(dest / home_state.url, "w") as f:
+            f.write(html_content)
 
 
 @app.cell

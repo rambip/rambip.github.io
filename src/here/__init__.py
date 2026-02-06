@@ -23,20 +23,13 @@ from pygments.formatters import HtmlFormatter
 from pygments.lexers import PythonLexer
 
 load_dotenv()
-PATH_WEB = Path(__file__).parent.parent.parent / "web"
 PATH_PAGES = Path(__file__).parent.parent.parent / "pages"
 PATH_ASSETS = Path(__file__).parent.parent.parent / "assets"
-PATH_TEMPLATES = Path(__file__).parent / "templates"
+PATH_MARKUP = Path(__file__).parent.parent.parent / "markup"
 if "PROJECT_DIR" in os.environ:
     PROJECTS = Path(os.environ["PROJECT_DIR"])
 else:
     PROJECTS = None
-
-# Home page URL constant
-HOME_PAGE_URL = "/index.html"
-
-with open(Path(__file__).parent / "templates" / "main.html") as f:
-    HTML_TEMPLATE = f.read()
 
 
 def compute_age(birth_date) -> int:
@@ -85,12 +78,54 @@ class MarimoPage:
         self.html_content = html_content
 
 
+class NotebookState:
+    """Intermediate representation of a notebook's executed state, before templating.
+    This is what gets cached to avoid re-executing notebooks unnecessarily."""
+
+    def __init__(
+        self,
+        url: str,
+        path_name: str,
+        title: str,
+        python_content: str,
+        content: list,  # list of (code_html, output_html, stdout) tuples
+    ):
+        self.url = url
+        self.path_name = path_name
+        self.title = title
+        self.python_content = python_content
+        self.content = content
+        self.python_content_encoded = base64.b64encode(
+            bytes(python_content, "utf-8")
+        ).decode("utf-8")
+        self.python_content_for_marimo = (
+            lzstring.LZString.compressToEncodedURIComponent(python_content)
+        )
+
+    def render(
+        self, template_string: str, home_page_url: str = "/", is_home: bool = False
+    ) -> "MarimoPage":
+        """Render this notebook state with a specific template."""
+        template = Environment(loader=BaseLoader()).from_string(template_string)
+        html_content = template.render(
+            title=self.title,
+            name=self.path_name,
+            content=self.content,
+            home_page_url=home_page_url,
+            is_home=is_home,
+            python_content_encoded=self.python_content_encoded,
+            python_filename=self.path_name,
+            python_content_for_marimo=self.python_content_for_marimo,
+        )
+        return MarimoPage(self.url, html_content)
+
+
 class Embed:
     def __init__(
         self,
         path,
         app: marimo.App,
-        link_name: str,
+        title: str,
         children: Sequence["Embed"] = [],
         url=None,
         include: Sequence[FileState] = [],
@@ -102,7 +137,7 @@ class Embed:
             self.url = f"{self.path.name}.html"
         else:
             self.url = url
-        self.link_name = link_name
+        self.title = title
         self.cells = get_cells(path)
         self.includes = [f.read_text() for f in include]
         seed_code = StringIO()
@@ -129,18 +164,16 @@ class Embed:
         )
 
     def _repr_html_(self):
-        return f'<a href="/{self.url}">{self.link_name}</a>'
+        return f'<a href="/{self.url}">{self.title}</a>'
 
     @cachier(cache_dir=".cache")
-    def _build_html(
+    def _execute_notebook(
         self,
         python_content: str,
         _hash: int,
-        template_string: str,
-    ) -> MarimoPage:
-        template = Environment(loader=BaseLoader()).from_string(template_string)
-        print(f"building page {self.path.name}")
-        content = f"dummy content of {self.path.name}"
+    ) -> NotebookState:
+        """Execute the notebook and return its state. This is cached separately from templating."""
+        print(f"executing notebook {self.path.name}")
 
         def repr_(x):
             if x is None:
@@ -158,10 +191,10 @@ class Embed:
             buffer = io.StringIO()
             print(*args, **kwargs, file=buffer)
             output = buffer.getvalue()
-            stdout_outputs[-1].append(output)  # Remove trailing newline
+            stdout_outputs[-1].append(output)
 
         def new_cell():
-            # TODO: refactor (uggly)
+            # TODO: refactor (ugly)
             stdout_outputs[-1] = "".join(stdout_outputs[-1])
             stdout_outputs.append([])
 
@@ -177,9 +210,9 @@ class Embed:
             for x in self.app._flatten_outputs(runner._run_synchronous([new_cell])[0])
         ]
         lexer = PythonLexer()
-        formater = HtmlFormatter()
+        formatter = HtmlFormatter()
         code = [
-            highlight(c.code, lexer, formater)
+            highlight(c.code, lexer, formatter)
             if not c.config.hide_code and not c.config.disabled
             else None
             for c in self.cells
@@ -195,29 +228,32 @@ class Embed:
             )
         content = list(zip(code, outputs, stdout_outputs))
 
-        data_for_marimo = lzstring.LZString.compressToEncodedURIComponent(
-            python_content
-        )
-        html_content = template.render(
-            name=self.path.name,
+        return NotebookState(
+            url=self.url,
+            path_name=self.path.name,
+            title=self.title,
+            python_content=python_content,
             content=content,
-            home_page_url=HOME_PAGE_URL,
-            python_content_encoded=base64.b64encode(
-                bytes(python_content, "utf-8")
-            ).decode("utf-8"),
-            python_filename=self.path.name,
-            python_content_for_marimo=data_for_marimo,
         )
-        return MarimoPage(self.url, html_content)
 
     def __hash__(self) -> int:
         return hash((self.python_content, self.children))
 
-    def _build_(self) -> Iterable[MarimoPage]:
+    def _execute_all(self) -> Iterable[NotebookState]:
+        """Execute this notebook and all children, returning NotebookState objects.
+        The execution is cached based on notebook content."""
+        # Execute children first
         for c in self.children:
-            yield from c._build_()
+            yield from c._execute_all()
 
-        yield self._build_html(self.python_content, hash(self), HTML_TEMPLATE)
+        # Execute this notebook
+        yield self._execute_notebook(self.python_content, hash(self))
+
+    def _execute_children(self) -> Iterable[NotebookState]:
+        """Execute only the children notebooks, not this one.
+        Useful when you want to render the parent differently."""
+        for c in self.children:
+            yield from c._execute_all()
 
 
 def asset(relative_path: str):

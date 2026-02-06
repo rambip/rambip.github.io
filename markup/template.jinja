@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>{{ name }}</title>
+        <title>{{ title }}</title>
         <link rel="stylesheet" href="/assets/style.css" />
         <link rel="stylesheet" href="/assets/language.css" />
         <link rel="stylesheet" href="/assets/code_highlighting.css" />
@@ -29,11 +29,42 @@
                 cursor: pointer;
                 border-radius: 4px;
             }
+            nav {
+                display: flex;
+                gap: 1rem;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .github-link {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            .github-logo {
+                width: 24px;
+                height: 24px;
+            }
         </style>
     </head>
     <body id="root">
         <nav>
-            <a href="{{ home_page_url }}">Home</a>
+            {% if is_home %}
+            <span class="nav-title">rambip</span>
+            {% else %}
+            <a href="{{ home_page_url }}" class="nav-title">home</a>
+            {% endif %}
+            <a
+                href="https://github.com/rambip"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="github-link"
+            >
+                <img
+                    src="/assets/github-logo.svg"
+                    alt="GitHub"
+                    class="github-logo"
+                />
+            </a>
         </nav>
         <div class="content">
             <script id="file-content" type="text/plain">
