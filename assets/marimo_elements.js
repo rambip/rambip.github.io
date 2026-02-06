@@ -135,160 +135,245 @@ customElements.define("marimo-tex", MarimoTex);
 class MarimoCarousel extends HTMLElement {
   constructor() {
     super();
-    this._currentIndex = 0;
-    this._slides = [];
-    this._initialized = false;
+    this.currentIndex = 0;
+    this.attachShadow({ mode: 'open' });
   }
 
   connectedCallback() {
     // Use setTimeout to ensure all children are loaded
     setTimeout(() => {
-      if (!this._initialized) {
-        this._initialize();
-      }
+      this.render();
+      this.setupEventListeners();
     }, 0);
   }
 
-  _initialize() {
-    this._initialized = true;
+  render() {
+    const height = this.getAttribute("height") || "550px";
     
-    // Setup container styles
-    this.style.display = "block";
-    this.style.position = "relative";
-    this.style.width = "100%";
-    this.style.height = this.getAttribute("height") || "550px";
-    this.style.border = "1px solid #e5e7eb";
-    this.style.borderRadius = "0.5rem";
-    this.style.backgroundColor = "var(--background, #fff)";
+    const style = `
+      <style>
+        :host {
+          display: block;
+          position: relative;
+          width: 100%;
+          height: ${height};
+          border: 1px solid #e5e7eb;
+          border-radius: 0.5rem;
+          background-color: var(--background, #fff);
+          overflow: hidden;
+        }
 
-    // Get all original children as slides
-    this._slides = Array.from(this.children);
+        .carousel-container {
+          position: relative;
+          width: 100%;
+          height: 100%;
+        }
+
+        .carousel-content {
+          position: relative;
+          width: 100%;
+          height: 100%;
+        }
+
+        /* Using position absolute stacks all slides on top of each other.
+           This means the carousel height is fixed (not dependent on content),
+           and we must handle overflow for each slide independently. */
+        ::slotted(*) {
+          position: absolute !important;
+          top: 0 !important;
+          left: 0 !important;
+          width: 100% !important;
+          height: 100% !important;
+          padding: 1.5rem !important;
+          padding-bottom: 3rem !important;
+          box-sizing: border-box !important;
+          overflow-y: auto !important;
+          overflow-x: hidden !important;
+          display: none !important;
+        }
+
+        ::slotted(.active) {
+          display: block !important;
+        }
+
+        .carousel-controls {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+        }
+
+        .carousel-btn {
+          pointer-events: auto;
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          z-index: 100;
+          background-color: rgba(255, 255, 255, 0.9);
+          border: 1px solid #e5e7eb;
+          border-radius: 0.375rem;
+          padding: 0.5rem 0.75rem;
+          cursor: pointer;
+          font-size: 1.25rem;
+          line-height: 1;
+          color: #374151;
+          transition: background-color 0.2s;
+        }
+
+        .carousel-btn:hover {
+          background-color: rgba(255, 255, 255, 1);
+        }
+
+        .carousel-btn.prev {
+          left: 1rem;
+        }
+
+        .carousel-btn.next {
+          right: 1rem;
+        }
+
+        .pagination {
+          pointer-events: auto;
+          position: absolute;
+          bottom: 1rem;
+          left: 50%;
+          transform: translateX(-50%);
+          display: flex;
+          gap: 0.5rem;
+          z-index: 100;
+        }
+
+        .dot {
+          width: 0.5rem;
+          height: 0.5rem;
+          border-radius: 50%;
+          border: none;
+          cursor: pointer;
+          padding: 0;
+          background-color: #d1d5db;
+          transition: background-color 0.2s;
+        }
+
+        .dot.active {
+          background-color: #3b82f6;
+        }
+
+        .dot:hover {
+          background-color: #9ca3af;
+        }
+
+        .dot.active:hover {
+          background-color: #2563eb;
+        }
+      </style>
+    `;
+
+    const template = `
+      ${style}
+      <div class="carousel-container">
+        <div class="carousel-content">
+          <slot></slot>
+        </div>
+        <div class="carousel-controls">
+          <button class="carousel-btn prev" aria-label="Previous slide">❮</button>
+          <button class="carousel-btn next" aria-label="Next slide">❯</button>
+          <div class="pagination"></div>
+        </div>
+      </div>
+    `;
+
+    this.shadowRoot.innerHTML = template;
+    this.createPaginationDots();
+  }
+
+  createPaginationDots() {
+    const pagination = this.shadowRoot.querySelector('.pagination');
+    const children = this.getChildren();
     
-    if (this._slides.length === 0) return;
+    children.forEach((_, index) => {
+      const dot = document.createElement('button');
+      dot.className = 'dot';
+      dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
+      if (index === this.currentIndex) {
+        dot.classList.add('active');
+      }
+      dot.addEventListener('click', () => this.goTo(index));
+      pagination.appendChild(dot);
+    });
+  }
 
-    // Wrap all slides in containers and hide them
-    this._slides.forEach((slide, index) => {
-      slide.style.position = "absolute";
-      slide.style.top = "0";
-      slide.style.left = "0";
-      slide.style.width = "100%";
-      slide.style.height = "100%";
-      slide.style.padding = "1.5rem";
-      slide.style.paddingBottom = "3rem";
-      slide.style.boxSizing = "border-box";
-      slide.style.overflowY = "auto";
-      slide.style.overflowX = "hidden";
-      slide.style.display = index === this._currentIndex ? "block" : "none";
+  setupEventListeners() {
+    const prevBtn = this.shadowRoot.querySelector('.prev');
+    const nextBtn = this.shadowRoot.querySelector('.next');
+
+    prevBtn.addEventListener('click', () => this.prev());
+    nextBtn.addEventListener('click', () => this.next());
+
+    // Keyboard navigation - requires element to be focusable
+    this.setAttribute('tabindex', '0');
+    this.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        this.prev();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        this.next();
+      }
     });
 
-    // Create navigation controls
-    this._createControls();
+    // Initialize: show first child
+    this.updateDisplay();
+  }
+
+  getChildren() {
+    return Array.from(this.children);
+  }
+
+  updateDisplay() {
+    const children = this.getChildren();
+    const dots = this.shadowRoot.querySelectorAll('.dot');
     
-    // Setup keyboard navigation
-    this.setAttribute("tabindex", "0");
-    this.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowLeft") {
-        e.preventDefault();
-        this._navigate(-1);
-      } else if (e.key === "ArrowRight") {
-        e.preventDefault();
-        this._navigate(1);
+    children.forEach((child, index) => {
+      if (index === this.currentIndex) {
+        child.classList.add('active');
+      } else {
+        child.classList.remove('active');
+      }
+    });
+
+    dots.forEach((dot, index) => {
+      if (index === this.currentIndex) {
+        dot.classList.add('active');
+      } else {
+        dot.classList.remove('active');
       }
     });
   }
 
-  _createControls() {
-    // Previous button
-    const prevBtn = document.createElement("button");
-    prevBtn.innerHTML = "❮";
-    prevBtn.style.cssText = `
-      position: absolute;
-      top: 50%;
-      left: 1rem;
-      transform: translateY(-50%);
-      z-index: 100;
-      background-color: rgba(255, 255, 255, 0.9);
-      border: 1px solid #e5e7eb;
-      border-radius: 0.375rem;
-      padding: 0.5rem 0.75rem;
-      cursor: pointer;
-      font-size: 1.25rem;
-      line-height: 1;
-      color: #374151;
-    `;
-    prevBtn.onclick = () => this._navigate(-1);
-
-    // Next button
-    const nextBtn = document.createElement("button");
-    nextBtn.innerHTML = "❯";
-    nextBtn.style.cssText = `
-      position: absolute;
-      top: 50%;
-      right: 1rem;
-      transform: translateY(-50%);
-      z-index: 100;
-      background-color: rgba(255, 255, 255, 0.9);
-      border: 1px solid #e5e7eb;
-      border-radius: 0.375rem;
-      padding: 0.5rem 0.75rem;
-      cursor: pointer;
-      font-size: 1.25rem;
-      line-height: 1;
-      color: #374151;
-    `;
-    nextBtn.onclick = () => this._navigate(1);
-
-    // Pagination container
-    const pagination = document.createElement("div");
-    pagination.style.cssText = `
-      position: absolute;
-      bottom: 1rem;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 0.5rem;
-      z-index: 100;
-    `;
-
-    // Create dots
-    this._dots = [];
-    this._slides.forEach((_, index) => {
-      const dot = document.createElement("button");
-      dot.style.cssText = `
-        width: 0.5rem;
-        height: 0.5rem;
-        border-radius: 50%;
-        border: none;
-        cursor: pointer;
-        padding: 0;
-        background-color: ${index === this._currentIndex ? "#3b82f6" : "#d1d5db"};
-      `;
-      dot.onclick = () => this._goToSlide(index);
-      pagination.appendChild(dot);
-      this._dots.push(dot);
-    });
-
-    this.appendChild(prevBtn);
-    this.appendChild(nextBtn);
-    this.appendChild(pagination);
+  next() {
+    const children = this.getChildren();
+    if (children.length === 0) return;
+    
+    this.currentIndex = (this.currentIndex + 1) % children.length;
+    this.updateDisplay();
   }
 
-  _navigate(delta) {
-    const newIndex = (this._currentIndex + delta + this._slides.length) % this._slides.length;
-    this._goToSlide(newIndex);
+  prev() {
+    const children = this.getChildren();
+    if (children.length === 0) return;
+    
+    this.currentIndex = (this.currentIndex - 1 + children.length) % children.length;
+    this.updateDisplay();
   }
 
-  _goToSlide(index) {
-    if (index === this._currentIndex || index < 0 || index >= this._slides.length) return;
-    
-    this._slides[this._currentIndex].style.display = "none";
-    this._currentIndex = index;
-    this._slides[this._currentIndex].style.display = "block";
-    
-    // Update dots
-    this._dots.forEach((dot, i) => {
-      dot.style.backgroundColor = i === this._currentIndex ? "#3b82f6" : "#d1d5db";
-    });
+  goTo(index) {
+    const children = this.getChildren();
+    if (index >= 0 && index < children.length) {
+      this.currentIndex = index;
+      this.updateDisplay();
+    }
   }
 }
 
