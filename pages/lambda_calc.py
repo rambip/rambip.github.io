@@ -9,7 +9,7 @@
 
 import marimo
 
-__generated_with = "0.19.7"
+__generated_with = "0.19.8"
 app = marimo.App(
     width="full",
     css_file="/usr/local/_marimo/custom.css",
@@ -90,10 +90,11 @@ def _(mo):
 def _(mo):
     mo.md(r"""
     Let's start with some rules:
-    1. you can only `print(0)` or `print(1)` in your code. That's the only way you have to communicate with the external world.
-    2. No loop, no if / then / else
-    3. No operation (addition, substraction, logical operations ...)
-    4. You can use functions.
+    1. No loop, no if / then / else
+    2. You can only use "0" and "1", and the only thing you can do on strings is *concatenation*: `"a" + "b"` to get `"ab"`.
+    3. No list, no number, no operation (addition, substraction, multiplication and so on)
+    4. You cannot communicate with the external world inside the functions. You can only use "print" at the very end of your code.
+    5. You can use functions.
 
     What do you think you can do with these rules ? Not much ? Let's see ...
     """)
@@ -102,58 +103,33 @@ def _(mo):
 
 @app.cell
 def _():
-    print(0, end="")
-    print(1, end="")
-
+    "0" + "1"
     # Not very interesting ...
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""
+    mo.md("""
     ## Challenge 0
 
-    Print `0011` with maximum 2 `print` statements, and without ever "dropping".
-
-    "Dropping" means either:
-    - not returning a value from a function
-    - calling a function and not using the return value
-
-    For example:
-
-    ```python
-    def print_one_drop():
-        print(1)
-        # I did not return: I dropped
-
-    ```
-
-    Or:
-    ```
-    def print_one():
-        print(1):
-        return True
-
-    print_one() # oh no, I dropped !
-    print_one()
-
-    ```
+    Print `0011` with maximum 2 `+`
 
     <details>
         <summary>
             Solution
         </summary>
+
     ```py
-    def o(x):
-        print(0, end='')
-        return x
+    def p0(x):
+        # add "0" before
+        return "0" + x
 
-    def i(x):
-        print(1, end='')
-        return x
+    def p1(x):
+        # add "1" before
+        return "1" + x
 
-    i(i(o(o(None))))
+    p0(p0(p1(p1("\"))))
     ```
     </details>
     """)
@@ -165,7 +141,7 @@ def _(mo):
     mo.md(r"""
     This trick can seem strange, but you can do quite powerful things with it.
 
-    If you combine the first trick with a second one (passing functions as arguments), you get this:
+    Here is a new trick: *pass functions as argument*. Here is one example to show what it allows you do to:
     """)
     return
 
@@ -173,19 +149,18 @@ def _(mo):
 @app.cell
 def _():
     def p0(x):
-        print(0, end="")
-        return x
-
+        return "0" + x
+    
     def p1(x):
-        print(1, end="")
-        return x
+        return "1" + x
 
     # second trick: pass functions instead of values
-    def print_four_times(f):
-        f(f(f(f(None))))
+    def four_times(f):
+        return f(f(f(f(""))))
 
-    print_four_times(p0)
-    return p0, p1
+    print(four_times(p0))
+    print(four_times(p1))
+    return
 
 
 @app.cell(hide_code=True)
@@ -193,7 +168,7 @@ def _(mo):
     mo.md(r"""
     ## Challenge 1
 
-    Write a function `boo` that print either `0` or `1`, depending on the argument. Remember, no "if" and no arithmetic !
+    Write a function `boo` that returns either `0` or `1`, depending on the argument. Remember, no "if" and no arithmetic !
 
     <details>
         <summary>
@@ -209,10 +184,10 @@ def _(mo):
         return b
 
     def boo(side):
-        return side(i, o)(None)
+        return side("0", "1")
 
-    boo(false) # print 1
-    boo(true) # print 0
+    boo(false) # 0
+    boo(true) # 1
     ```
     </details>
     """)
@@ -230,7 +205,7 @@ def _(mo):
 
 
 @app.cell
-def _(p0, p1):
+def _():
     def true(a, b):
         return a
 
@@ -238,13 +213,13 @@ def _(p0, p1):
         return b
 
     def boo(side):
-        return side(p0, p1)(None)
+        return side("0", "1")
 
     def logical_not(x):
         return x(false, true)
 
-    boo(logical_not(false))
-    boo(logical_not(true))
+    print(boo(logical_not(false)))
+    print(boo(logical_not(true)))
     return boo, false, true
 
 
@@ -285,16 +260,28 @@ def _():
 
 
 @app.cell
-def _(boo, false, logical_and, logical_or, true):
-    boo(logical_or(false, false))
-    boo(logical_or(false, true))
-    boo(logical_or(true, false))
-    boo(logical_or(true, true))
-    print()
-    boo(logical_and(false, false))
-    boo(logical_and(false, true))
-    boo(logical_and(true, false))
-    boo(logical_and(true, true))
+def _(boo, false, logical_or, true):
+    print(
+        [
+            boo(logical_or(false, false)),
+            boo(logical_or(false, true)),
+            boo(logical_or(true, false)),
+            boo(logical_or(true, true)),
+        ]
+    )
+    return
+
+
+@app.cell
+def _(boo, false, logical_and, true):
+    print(
+        [
+            boo(logical_and(false, false)),
+            boo(logical_and(false, true)),
+            boo(logical_and(true, false)),
+            boo(logical_and(true, true)),
+        ]
+    )
     return
 
 
@@ -303,7 +290,7 @@ def _(mo):
     mo.md(r"""
     ## Challenge 3
 
-    The `church number functions` are defined in this way:
+    The functions of `church` are defined in this way:
 
     ```py
     def one(f, x):
@@ -318,13 +305,13 @@ def _(mo):
     ...
     ```
 
-    Write a function `product(a, b)` that takes as input two "church number functions" and print as many ones as the product of a and b.
+    Write a function `product(a, b)` that takes as input two "church number functions" and returns as many ones as the product of a and b.
 
     Hint: you can use this function:
     ```py
-    def print_n_zeros(n):
+    def n_ones(n):
         def result(x):
-            return n(o, x)
+            return n(p1, x)
         return result
     ```
 
@@ -333,23 +320,24 @@ def _(mo):
             Solution
         </summary>
     ```py
+
+    def three(f, x):
+        return f(f(f(x)))
+
     def four(f, x):
         return f(f(f(f(x))))
 
-    def five(f, x):
-        return f(f(f(f(f(x)))))
 
-    def print_n_zeros(n):
+    def n_ones(n):
         def result(x):
-            return n(o, x)
-
+            return n(p1, x)
         return result
 
-    def mult(a, b, x):
-        return a(print_n_zeros(b), x)
+    def mult(a, b):
+        return a(n_ones(b), "\")
 
-    mult(four, five, None)
-    # result: 00000000000000000000
+    mult(four, five, "\")
+    # result: 111111111111
     ```
     </details>
     """)
@@ -359,18 +347,18 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    If you're not used to functionnal programming, you may have noticed something strange in the "print_n_zeros" function:
+    If you're not used to functionnal programming, you may have noticed something strange in the "n_ones" function:
     ```py
-    def print_n_zeros(n):
+    def n_ones(n):
         def result(x):
-            return n(o, x)
+            return n(p1, x)
         return result
     ```
 
     We created a function on the fly, used some of the current context inside it (in this case, the variable `n`), and returned it immediatly. We gave it a name, but this name is completely arbitrary. We could have written it like this:
 
     ```py
-    def print_n_zeros(n):
+    def n_ones(n):
         return lambda x: n(o, x)
     ```
 
