@@ -2,223 +2,125 @@
 
 ## Project Goal
 
-This project is a personal website built entirely from **marimo notebooks**. It serves multiple purposes:
-- Share interactive computational notebooks (data analysis, algorithms, visualizations)
-- Publish art and creative coding projects
-- Host blog posts and journal entries
-- Showcase academic work and technical experiments
-
-The unique aspect: everything is written as executable marimo notebooks that are then compiled into a static website.
+Personal website built entirely from **marimo notebooks** to share interactive computational notebooks, art, creative coding, blog posts, and academic work. Everything is executable Python code compiled into a static website.
 
 ## Main Idea & Marimo
 
-**Marimo** is a reactive Python notebook framework where:
-- Notebooks are stored as pure Python files (`.py`), not JSON
-- Cells automatically re-execute when dependencies change (reactive dataflow)
-- Notebooks can be run as scripts, web apps, or compiled to static HTML
-- Code and outputs are tightly coupled, making them reproducible
-
-This project leverages marimo's ability to:
-1. Write content as interactive notebooks during development
-2. Execute notebooks programmatically to capture outputs
-3. Export the results as beautiful static HTML pages
-4. Maintain the entire website as version-controlled Python code
+**Marimo** is a reactive Python notebook framework where notebooks are pure Python files (`.py`), cells auto-execute when dependencies change, and outputs stay synchronized with code. This project uses marimo to write content as interactive notebooks, execute them programmatically, and export to static HTML while maintaining everything as version-controlled code.
 
 ## Codebase Structure
 
-### Root Folders
-
-- **`pages/`** - Marimo notebook files that become website pages
-  - Each `.py` file is a marimo notebook
-  - `home.py` is special: it's the entry point that builds the entire site
-  - Uses `page_()` function convention to expose notebooks for building
-
-- **`src/here/`** - Core library for the build system
-  - Imported as `from here import ...` in notebooks (the pun: "from here import stuff")
-  - Defines the `Embed` class for notebook execution and caching
-  - Provides utilities like `me()`, `asset()`, path constants
-  - Manages the execution → state → HTML rendering pipeline
-
-- **`markup/`** - Non-Python content files
-  - Jinja2 templates (`template.jinja`)
-  - Markdown files for inclusion in notebooks
-  - Typst files for document generation
-
-- **`assets/`** - Static assets
-  - CSS files (`style.css`, `code_highlighting.css`)
-  - JavaScript (custom web components like carousel)
-  - Fonts, images, logos
-
+- **`pages/`** - Marimo notebooks that become pages. `home.py` is the build entry point
+- **`src/here/`** - Build system core (the pun: `from here import ...`)
+- **`markup/`** - Jinja2 templates, markdown files, Typst documents
+- **`assets/`** - CSS, JavaScript, fonts, images
 - **`web/`** - Generated output (git-ignored)
-  - Final static HTML files
-  - Copied assets
-  - Ready to deploy
 
 ## The "here" Module
 
-The `src/here/` module is the heart of the build system. The name is a deliberate pun: notebooks start with `from here import ...`, meaning "from this codebase, import utilities".
+The deliberate pun lets notebooks do `from here import stuff`. It provides:
 
-### Key API Components
-
-**Core Classes:**
-- `Embed` - Wraps a marimo notebook for execution and rendering
-  - Constructor: `Embed(path, app, title, children=[], url=None, include=[])`
-  - `._execute_notebook()` - Executes and caches notebook state (cached with `cachier`)
-  - `._execute_all()` - Execute this notebook + all children recursively
-  - `._execute_children()` - Execute only children (useful for custom home page rendering)
-
-- `NotebookState` - Intermediate representation of executed notebook
+**Classes:**
+- `Embed(path, app, title, children, url, include)` - Wraps notebook for execution
+  - Executes and caches notebook state (using `cachier` → `.cache/`)
+  - Can execute self, all children, or just children
+- `NotebookState` - Cached execution result before rendering
   - Contains: title, url, code, outputs, python content
-  - `.render(template_string, home_page_url="/", is_home=False)` - Render to HTML
-
-- `MarimoPage` - Final HTML page ready to write
-  - Contains: url, html_content
+  - Can render to HTML with template
 
 **Utilities:**
-- `me()` - Returns personal info as polars DataFrame
-- `asset(relative_path)` - Load PDF/media assets with fallback handling
+- `me()` - Personal info
+- `asset(path)` - Load media assets
 - Path constants: `PATH_WEB`, `PATH_PAGES`, `PATH_ASSETS`, `PATH_MARKUP`
 
-### Design Principles
-
-- **Small surface area** - Minimal public API, everything you need and nothing more
-- **Separation of concerns** - Execution (cached) vs rendering (not cached)
-- **Composability** - Notebooks can be nested as trees (children)
+**Design:** Small API surface, separation of execution (cached) vs rendering (not cached), composable notebook trees.
 
 ## Build Process
 
-### Execution Flow
+**Run:** `mise run build` (see `mise.toml` for task definitions)
 
-1. **Entry point**: `mise run build` → executes `pages/home.py`
+**Flow:**
+1. `mise run build` executes `pages/home.py` using `uv run`
+2. `home.py` imports all page modules and creates an `Embed` tree with children
+3. For each child notebook:
+   - Execute notebook with marimo's AppScriptRunner
+   - Capture code outputs and stdout
+   - Cache result by content hash (`.cache/` directory)
+   - Return `NotebookState` object
+4. For each `NotebookState`:
+   - Load Jinja2 template from `markup/`
+   - Pass notebook data + context flags to template
+   - Render final HTML
+   - Write to `web/` directory
+5. Home page rendered last with special context (different navbar)
 
-2. **home.py orchestration**:
-   ```python
-   root = page_()  # Creates Embed tree with all children
-   
-   # Execute all children (cached)
-   for state in root._execute_children():
-       html = template.render(state, is_home=False)
-       write(state.url, html)
-   
-   # Execute and render home page specially
-   home_state = root._execute_notebook(...)
-   html = template.render(home_state, is_home=True)
-   write("index.html", html)
-   ```
+**Cache:** Changing templates only re-renders. Changing notebook code re-executes. Clear cache: `rm -rf .cache`
 
-3. **Caching strategy** (using `cachier`):
-   - `Embed._execute_notebook(python_content, hash)` is cached to `.cache/`
-   - Cache key = notebook content hash
-   - Changing template doesn't invalidate cache (only re-renders)
-   - Changing notebook code invalidates cache (re-executes)
-   - Returns `NotebookState` object (intermediate representation)
+## uv
 
-4. **Rendering**:
-   - Templates loaded via Jinja2 `FileSystemLoader`
-   - Template receives `NotebookState` attributes + `is_home` flag
-   - Different navbar for home (`is_home=True`) vs other pages
+Project uses **uv** for Python dependency management and execution:
+- Fast, reliable Python package installer
+- All code runs via `uv run` (see `mise.toml`)
+- Dependencies synced with `mise run sync`
 
-### mise.toml Tasks
+## Marimo Notebook Template
 
-- **`mise run sync`** - Sync Python dependencies (not frequently updated)
-- **`mise run copy-assets`** - Copy `assets/` to `web/assets/`
-- **`mise run build`** - Execute `pages/home.py` to generate all HTML
-- **Default workflow**: `mise run build` handles everything
+Basic structure for a page notebook:
+
+```python
+import marimo
+
+__generated_with = "0.17.6"
+app = marimo.App(width="medium")
+
+with app.setup(hide_code=True):
+    def page_():
+        from here import Embed
+        return Embed(__file__, globals()["app"], "Page Title")
+
+@app.cell
+def _():
+    import marimo as mo
+    return (mo,)
+
+@app.cell
+def _(mo):
+    mo.md("# Your content here")
+    return
+
+if __name__ == "__main__":
+    app.run()
+```
+
+Key points:
+- `page_()` function in setup cell returns `Embed` instance
+- Access `app` via `globals()["app"]`
+- Use `mo` for marimo utilities (markdown, HTML, etc.)
 
 ## Other Technologies
 
-### Typst
-- Modern markup language for creating documents (alternative to LaTeX)
-- Used for generating PDFs and formatted content
-- Files in `markup/*.typst` compiled and embedded in notebooks
+**Typst:** Modern markup for PDFs (LaTeX alternative), embedded in notebooks
 
-### Python Libraries
+**Python Libraries (for notebook content):**
+- **polars** - Fast DataFrames (preferred over pandas)
+- **altair** - Declarative visualizations
 
-**Data & Visualization:**
-- **polars** - Fast DataFrame library (preferred over pandas)
-- **altair** - Declarative visualization library (Vega-Lite based)
-
-**Content Processing:**
-- **pygments** - Syntax highlighting for code blocks
-- **lzstring** - Compress Python code for marimo.app links
-- **jinja2** - Template engine for HTML generation
-
-**Notebook Infrastructure:**
-- **marimo** - The notebook framework itself
-- **cachier** - Persistent caching with file backend
+`TODO.md` exists but is rarely current. Ask the human for priorities.
 
 ## Coding Style
 
-### Principles
+- **Concision** - Short, clear code over verbose explanations
+- **Assertions** - Use `assert` instead of try/except for invariants
+- **Refactor continuously** - Question: "Can this be simpler?"
+- **Small API** - Remove abstractions that don't pull weight
+- **Comments explain "why"** - Code shows "what"
 
-1. **Concision over verbosity**
-   - Prefer short, clear code over lengthy explanations
-   - Use functional patterns where appropriate
-   - One-liners are fine if readable
+## Interaction Rules
 
-2. **Assertions over error catching**
-   ```python
-   # Good
-   assert file_key is not None
-   assert len(code) == len(outputs)
-   
-   # Avoid
-   try:
-       if file_key is None:
-           raise ValueError(...)
-   except ValueError:
-       ...
-   ```
+When working on this project:
 
-3. **Continuous refactoring**
-   - Always revisit code to improve clarity
-   - Question: "Can this be simpler?"
-   - Remove abstractions that don't pull their weight
-   - Small API surface area is a feature
-
-4. **Comments for "why", not "what"**
-   - Code should be self-documenting
-   - Comments explain rationale: `# This is when using a setup cell`
-   - TODO comments are encouraged: `# TODO: refactor (ugly)`
-
-### Patterns
-
-- Use `Path` objects, not string concatenation
-- Prefer comprehensions over loops where clear
-- Type hints for public API, optional for internal code
-- Use `_private` prefix for internal methods
-
-## TODO.md
-
-The `TODO.md` file exists but is **rarely up to date**. Don't trust it blindly:
-- May contain outdated tasks
-- May not reflect current priorities
-- Can be useful for brainstorming ideas
-- Better to ask the human for current priorities
-
-When working on the project:
-1. Check `TODO.md` for context, not gospel
-2. Confirm tasks with the human before implementing
-3. Update `TODO.md` if you make significant changes (but don't rely on it)
-
-## Working with Agents
-
-When AI agents work on this project:
-
-**Do:**
-- Ask questions when unclear (better than assumptions)
-- Read the codebase before making changes
-- Check if similar functionality already exists
-- Look for opportunities to simplify, not just add features
-- Test with `mise run build` after changes
-- Clear cache (`rm -rf .cache`) when changing `NotebookState` structure
-
-**Don't:**
-- Add abstractions without clear benefits
-- Catch errors that should be assertions
-- Create redundant utilities
-- Assume `TODO.md` is current
-- Modify templates without understanding the rendering flow
-- Add dependencies without asking
-
-The project values **simplicity, clarity, and maintainability** over feature richness.
+1. **Ask questions** when unclear (better than assumptions)
+2. **Simplify, not just add** - Look for opportunities to reduce complexity
+3. **Ask before running** - "Should I run `mise run build`?" or "Clear cache?"
+4. **Prioritize maintainability** - Small, clear changes over clever solutions
+5. **Stay concise** - In code and communication
