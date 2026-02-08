@@ -208,18 +208,20 @@ class MarimoCarousel extends HTMLElement {
         .carousel-btn {
           pointer-events: auto;
           position: absolute;
-          top: 50%;
-          transform: translateY(-50%);
+          top: 0;
+          height: 100%;
           z-index: 100;
           background-color: rgba(255, 255, 255, 0.9);
           border: 1px solid #e5e7eb;
           border-radius: 0.375rem;
-          padding: 0.5rem 0.75rem;
+          padding: 0 1rem;
           cursor: pointer;
-          font-size: 1.25rem;
-          line-height: 1;
+          font-size: 1.5rem;
           color: #374151;
           transition: background-color 0.2s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
         .carousel-btn:hover {
@@ -227,11 +229,21 @@ class MarimoCarousel extends HTMLElement {
         }
 
         .carousel-btn.prev {
-          left: 1rem;
+          left: 0;
+          border-left: none;
+          border-top-left-radius: 0.5rem;
+          border-bottom-left-radius: 0.5rem;
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
         }
 
         .carousel-btn.next {
-          right: 1rem;
+          right: 0;
+          border-right: none;
+          border-top-right-radius: 0.5rem;
+          border-bottom-right-radius: 0.5rem;
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
         }
 
         .pagination {
