@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.13"
 # dependencies = [
-#     "curryparty==0.4.2",
+#     "curryparty==0.4.3",
 #     "marimo>=0.19.7",
 #     "polars==1.38.0",
 # ]
@@ -150,7 +150,7 @@ def _(mo):
 def _():
     def p0(x):
         return "0" + x
-    
+
     def p1(x):
         return "1" + x
 
