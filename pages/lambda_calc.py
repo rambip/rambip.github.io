@@ -9,7 +9,7 @@
 
 import marimo
 
-__generated_with = "0.19.8"
+__generated_with = "0.19.9"
 app = marimo.App(
     width="full",
     css_file="/usr/local/_marimo/custom.css",
@@ -113,7 +113,7 @@ def _(mo):
     mo.md("""
     ## Challenge 0
 
-    Print `0011` with maximum 2 `+`
+    Print `0011` without using `+` more than 2 times.
 
     <details>
         <summary>
@@ -216,7 +216,7 @@ def _():
         return side("0", "1")
 
     def logical_not(x):
-        return x(false, true)
+        return x(true, false)
 
     print(boo(logical_not(false)))
     print(boo(logical_not(true)))
@@ -405,7 +405,7 @@ def _(mo):
 
 @app.cell
 def _(L):
-    L("x").o("x").build()
+    L("x").o("x")
     return
 
 
@@ -433,9 +433,9 @@ def _(mo):
 
 @app.cell
 def _(L, mo):
-    return_first = L("x", "y", "z").o("x").build()
-    return_second = L("x", "y", "z").o("y").build()
-    return_third = L("x", "y", "z").o("z").build()
+    return_first = L("x", "y", "z").o("x")
+    return_second = L("x", "y", "z").o("y")
+    return_third = L("x", "y", "z").o("z")
     mo.hstack([return_first, return_second, return_third])
     return
 
@@ -491,7 +491,7 @@ def _(mo):
 
 @app.cell
 def _(L):
-    L("x", "f").o("f", "x").build()
+    L("x", "f").o("f", "x")
     return
 
 
@@ -523,15 +523,15 @@ def _(mo):
 
 @app.cell
 def _(L):
-    do_nothing = L("x").o("x").build()
+    do_nothing = L("x").o("x")
     do_nothing  # it's also called the "identity" function
     return
 
 
 @app.cell
 def _(L):
-    l_false = L("a", "b").o("a").build()  # takes the left (first) argument
-    l_true = L("a", "b").o("b").build()  # takes the right (second) argument
+    l_false = L("a", "b").o("a")  # takes the left (first) argument
+    l_true = L("a", "b").o("b")  # takes the right (second) argument
     l_false
     return l_false, l_true
 
@@ -565,11 +565,11 @@ def _(mo):
 
 @app.cell
 def _(L, mo, o):
-    zero = L("f", "x").o("x").build()
-    one = L("f", "x").o("f", "x").build()
-    two = L("f", "x").o("f", o("f", "x")).build()
-    three = L("f", "x").o("f", o("f", o("f", "x"))).build()
-    four = L("f", "x").o("f", o("f", o("f", o("f", "x")))).build()
+    zero = L("f", "x").o("x")
+    one = L("f", "x").o("f", "x")
+    two = L("f", "x").o("f", o("f", "x"))
+    three = L("f", "x").o("f", o("f", o("f", "x")))
+    four = L("f", "x").o("f", o("f", o("f", o("f", "x"))))
     mo.hstack([zero, one, two, three])
     return four, one, three, two, zero
 
@@ -584,7 +584,7 @@ def _(mo):
 
 @app.cell
 def _(L, o):
-    s_myst = L("n", "m", "f", "x").o("n", o("m", "f"), "x").build()
+    s_myst = L("n", "m", "f", "x").o("n", o("m", "f"), "x")
     s_myst
     return (s_myst,)
 
@@ -649,6 +649,7 @@ def _(mo):
     style app2 stroke:#ffcc00,stroke-width:3px
     style app3 stroke:#ffcc00,stroke-width:3px
     """
+    directive = "%%{init: { 'logLevel': 'debug', 'theme': 'neutral' } }%%"
 
     mo.hstack(
         [
@@ -656,6 +657,7 @@ def _(mo):
                 [
                     mo.md("### Composition"),
                     mo.mermaid(f"""
+        {directive}
         graph BT
         h[h] --> app1[⭕]
         x[x] --> app1
@@ -679,6 +681,7 @@ def _(mo):
                 [
                     mo.md("### Forwarding"),
                     mo.mermaid(f"""
+        {directive}
        graph BT
         f[f] --> app1[⭕]
         g[g] --> app1
@@ -711,8 +714,8 @@ def _(mo):
 
 @app.cell
 def _(L, o):
-    compose = L("f", "g", "h", "x").o("f", o("g", o("h", "x"))).build()
-    forward = L("f", "g", "h", "x").o("f", "g", "h", "x").build()
+    compose = L("f", "g", "h", "x").o("f", o("g", o("h", "x")))
+    forward = L("f", "g", "h", "x").o("f", "g", "h", "x")
     return compose, forward
 
 
@@ -847,10 +850,10 @@ def _(mo):
 
 @app.cell
 def _(L, o, one):
-    succ = L("n", "f", "x").o("f", o("n", "f", "x")).build()
-    stuff_to_compute = succ(one)
+    s = L("n", "f", "x").o("f", o("n", "f", "x"))
+    stuff_to_compute = s(one)
     stuff_to_compute
-    return stuff_to_compute, succ
+    return (stuff_to_compute,)
 
 
 @app.cell(hide_code=True)
@@ -863,9 +866,9 @@ def _(mo):
 
 @app.cell
 def _():
-    succ_py = lambda n: lambda f: lambda x: f(n(f)(x))
-    one_py = lambda f: lambda x: f(x)
-    # TODO: compute `succ_py(one_py)`
+    s_py = lambda n: lambda f: lambda x: f(n(f)(x))
+    result_py = lambda f: lambda x: f(x)
+    # TODO: compute `s_py(one_py)`
     return
 
 
@@ -970,8 +973,8 @@ def _(mo):
 
 @app.cell
 def _(L):
-    _a = L("f").o("f", "f", "f").build()
-    _b = L("x", "y").o("x").build()
+    _a = L("f").o("f", "f", "f")
+    _b = L("x", "y").o("x")
     _a(_b)
     return
 
@@ -1094,7 +1097,7 @@ def _(mo):
 @app.cell
 def _(L):
     _e = L("y").o(L("x").o("x"), "y")
-    L("f").o("f", _e, _e).build()
+    L("f").o("f", _e, _e)
     return
 
 
@@ -1163,7 +1166,7 @@ def _(mo):
 
 @app.cell
 def _(L):
-    omega = L("f").o("f", "f").build()
+    omega = L("f").o("f", "f")
     omega(omega).show_beta()
     return (omega,)
 
@@ -1299,7 +1302,7 @@ def _(mo):
     mo.md(r"""
     ## The leftmost-outermost reduction is normalizing
 
-    This looks crazy, but it is simpler than the first theorem.
+    This looks scary, but it is simpler than the first theorem.
 
     This theorem states that the smart way to reduce is to take the first redex.
 
@@ -1367,15 +1370,11 @@ def _(mo):
 
 @app.cell
 def _(L, o):
-    pred = (
-        L("n", "f", "x")
-        .o(
-            "n",
-            L("g", "h").o("h", o("g", "f")),
-            L("u").o("x"),
-            L("u").o("u"),
-        )
-        .build()
+    pred = L("n", "f", "x").o(
+        "n",
+        L("g", "h").o("h", o("g", "f")),
+        L("u").o("x"),
+        L("u").o("u"),
     )
     pred
     return (pred,)
@@ -1389,16 +1388,16 @@ def _(pred, two):
 
 @app.cell
 def _(L, l_false, l_true):
-    pair = L("a", "b", "x").o("x", "a", "b").build()
-    first = L("x").o("x", l_false).build()
-    second = L("x").o("x", l_true).build()
+    pair = L("a", "b", "x").o("x", "a", "b")
+    first = L("x").o("x", l_false)
+    second = L("x").o("x", l_true)
     pair
     return first, pair, second
 
 
 @app.cell
 def _(L, four, o, three):
-    sum = L("n", "m", "f", "x").o(o("n", "f"), o("m", "f", "x")).build()
+    sum = L("n", "m", "f", "x").o(o("n", "f"), o("m", "f", "x"))
     sum(four)(three).reduce()
     return (sum,)
 
@@ -1406,7 +1405,7 @@ def _(L, four, o, three):
 @app.cell
 def _(L, first, o, pair, second, sum):
     fib_pair = (
-        L("p").o(pair, o(sum, o(first, "p"), o(second, "p")), o(first, "p")).build()
+        L("p").o(pair, o(sum, o(first, "p"), o(second, "p")), o(first, "p"))
     ).reduce()
     fib_pair
     return (fib_pair,)
@@ -1421,35 +1420,31 @@ def _(fib_pair, four, one, pair, succ, zero):
 
 @app.cell
 def _(L, o):
-    fact = (
-        L("n", "f").o(
-            "n",
-            L("f", "n").o("n", o("f", L("f", "x").o("n", "f", o("f", "x")))),
-            L("x").o("f"),
-            L("x").o("x"),
-        )
-    ).build()
+    fact = L("n", "f").o(
+        "n",
+        L("f", "n").o("n", o("f", L("f", "x").o("n", "f", o("f", "x")))),
+        L("x").o("f"),
+        L("x").o("x"),
+    )
     fact
     return (fact,)
-
-
-@app.cell
-def _(L, o):
-    # the Y combinator
-    y = (
-        L("f").o(
-            L("g").o("f", o("g", "g")),
-            L("g").o("f", o("g", "g")),
-        )
-    ).build()
-    y
-    return (y,)
 
 
 @app.cell
 def _(fact, four):
     fact(four).reduce()
     return
+
+
+@app.cell
+def _(L, o):
+    # the Y combinator
+    y = L("f").o(
+        L("g").o("f", o("g", "g")),
+        L("g").o("f", o("g", "g")),
+    )
+    y
+    return (y,)
 
 
 @app.cell
@@ -1471,7 +1466,6 @@ def _(L, first, l_false, l_true, o, pair, second, succ, zero):
             ),
             o(pair, zero, l_false),
         )
-        .build()
         .reduce()
     )
     div2
@@ -1487,8 +1481,8 @@ def _(div2, mo, three):
 
 @app.cell
 def _(L, first, o, pair, second):
-    pack = L("f", "p").o("f", o(first, "p"), o(second, "p")).build().reduce()
-    unpack = L("f", "a", "b").o("f", o(pair, "a", "b")).build()
+    pack = L("f", "p").o("f", o(first, "p"), o(second, "p")).reduce()
+    unpack = L("f", "a", "b").o("f", o(pair, "a", "b"))
     pack
     return
 
@@ -1507,33 +1501,20 @@ def _(div2, four):
 
 @app.cell
 def _(L, l_false, l_true, o):
-    mult = L("n", "m", "f", "x").o("n", o("m", "f"), "x").build()
-    is_not_zero = L("n").o("n", L("f").o(l_true), l_false).build().reduce()
-    return is_not_zero, mult
+    mult = L("n", "m", "f", "x").o("n", o("m", "f"), "x")
+    succ = L("n", "f", "x").o("f", o("n", "f", "x"))
+    is_not_zero = L("n").o("n", L("f").o(l_true), l_false).reduce()
+    return is_not_zero, mult, succ
 
 
 @app.cell
-def _(
-    L,
-    div2,
-    first,
-    is_not_zero,
-    mult,
-    o,
-    pair,
-    second,
-    succ,
-    three,
-    y,
-    zero,
-):
+def _(L, div2, first, is_not_zero, mult, o, one, pair, second, succ, three, y):
     syracuse = y(
-        L("F", "n")
-        .o(
+        L("F", "n").o(
             o(
                 L("half_and_reminder").o(
                     o(is_not_zero, o(first, "half_and_reminder")),
-                    zero,  # ?
+                    one,
                     o(
                         pair,
                         "n",
@@ -1552,7 +1533,6 @@ def _(
                 o(div2, "n"),
             )
         )
-        .build()
     )
     syracuse
     return
