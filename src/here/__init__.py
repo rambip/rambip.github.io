@@ -47,7 +47,8 @@ def me():
     age = compute_age(birth_date)
     name = "Antonin"
     alias = "rambip"
-    return pl.DataFrame([{"age": age, "name": name, "alias": alias}])
+    mail = "antonin.peronnet@telecom-paris.fr"
+    return pl.DataFrame([{"age": age, "name": name, "alias": alias, "mail": mail}])
 
 
 class SimplifiedCellData:
